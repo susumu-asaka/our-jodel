@@ -3,7 +3,7 @@
 
 ### Entity-Relationship Diagram
 
-![alt text](./Data_Model.png)
+![Data Model](./Data_Model.png)
 
 ### Data Dictionary
 
@@ -13,7 +13,7 @@
 | ----------- | ------------------------------------------------------------ |
 | message     | Text can have length up to 240 characters.                   |
 | imageBase64 | Image encoded base 64.                                       |
-| color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have six colors:<br />![colors](C:\Users\susum\OurJodel\colors.png) |
+| color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have six colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | distance    | One of the following:<br />&bull; here (less than 1 km)<br />&bull; very-close (between 1 and 2 km)<br />&bull; close (between 2 and 10 km)<br />&bull; far (more than 10 km)<br />&bull; hometown (posted from a different location using hometown feature) |
