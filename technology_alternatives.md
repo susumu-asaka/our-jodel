@@ -135,12 +135,13 @@ Being the most popular solution, you find a rich set of third-party packages as 
 
 ## Conclusion
 
-Our main concern here is the development schedule. In this regard, Ionic has the advantage.
+Our main concern here is the development schedule. In this regard, Ionic has the advantage. Both in its write once and use everywhere approach and by leveraging our full-stack development expertise.
 
-On the other hand, with current devices performance is not such a concern, except perhaps for some low end Android devices.
+On the other hand, with current devices, performance is not such a concern, except perhaps for some low-end Android devices.
 
-Also, our application does not require access to any advanced native features of the device.
+Also, our application does not require access to any advanced native feature of the device.
 
 Ionic still has no ground-breaking killer app but it has a nice showcase of apps that are using it. Some bigger companies are using it and the speed of development you can achieve with Ionic is probably especially appealing to highly agile and small teams like us. Not meaning that no bigger companies are using it, as you can see in the showcase.
 
 Therefore, these considerations lead us to the conclusion that Ionic is probably the best solution. This conclusion should be validated in a first two-week spike in early November.
+
