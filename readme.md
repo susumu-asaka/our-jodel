@@ -24,19 +24,19 @@
 
 #### User
 
-| Attribute    | Description                                                  |
-| ------------ | ------------------------------------------------------------ |
-| **username** | Login e-mail address.                                        |
-| password     | Login password.                                              |
-| latitude     | Signed latitude of user's location, in degrees, with precision of 5 decimal places. |
-| longitude    | Signed longitude of the user's location, in degrees, with precision of 5 decimal places. |
-| location     | Name of the user's location, normally equals to the name of the city. |
-| city         | Name of the city of the the user's location, e.g.: São Paulo |
-| country      | Two letter country code, e.g. BR                             |
-| type         | User's type. Users can have one of 6 types:<br />&bull; Aprendiz<br />&bull; Funcionário<br />&bull; Colegial<br />&bull; Vestibulando<br />&bull; Universitário<br />&bull; Outros |
-| gender       | &ldquo;m&rdquo; or &ldquo;f&rdquo;                           |
-| birthyear    | User's birthyear with 4 digits.                              |
-| karma        | User's score: <br /> &bull; The user earns (looses) 2 karma for upvoting (downvoting) on a post<br /> &bull; The user earns (looses) 10 karma when he receives an upvote (downvote)<br /> &bull; The user earns 1 karma for thanking another user who replies to his post<br /> &bull; The replier earns 5 karma for receiving thanks. |
+| Attribute      | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| **email**      | Email address.                                               |
+| activationCode | Activation code.                                             |
+| latitude       | Signed latitude of user's location, in degrees, with precision of 5 decimal places. |
+| longitude      | Signed longitude of the user's location, in degrees, with precision of 5 decimal places. |
+| location       | Name of the user's location, normally equals to the name of the city. |
+| city           | Name of the city of the the user's location, e.g.: São Paulo |
+| country        | Two letter country code, e.g. BR                             |
+| type           | User's type. Users can have one of 6 types:<br />&bull; Aprendiz<br />&bull; Funcionário<br />&bull; Colegial<br />&bull; Vestibulando<br />&bull; Universitário<br />&bull; Outros |
+| gender         | &ldquo;m&rdquo; or &ldquo;f&rdquo;                           |
+| birthyear      | User's birthyear with 4 digits.                              |
+| karma          | User's score: <br /> &bull; The user earns (looses) 2 karma for upvoting (downvoting) on a post<br /> &bull; The user earns (looses) 10 karma when he receives an upvote (downvote)<br /> &bull; The user earns 1 karma for thanking another user who replies to his post<br /> &bull; The replier earns 5 karma for receiving thanks. |
 
 #### Remark
 
@@ -71,4 +71,106 @@
 | **name**      | Unique identifier of channel, CamelCase style. <br />At first, users will not be able to create their own channels, but will be able to post and follow the ones we will create.<br/>Like everything in Jodel, the channels will also have local coverage. When a user follows a channel, everything others post to the channel within the 10km radius circle will automatically appear in his home feed.<br/>Here are some channels we consider important for every local community:<br/>&bullet; **PerguntasLocais**: This is a part of this local community that aims to deliver a great local question & answer experience. What was the loud noise 2 minutes ago all about? Why do all people nearby suddenly wear red sneakers? This is a place to help each other and satisfy users' curiosity.<br/>&bullet; **CommunidadeAnimal** is the home for all of our pet lovers. Here users can get their daily dose of cuteness to get them through a rough day.<br/>&bullet; **AcontecendoHoje!** is the place where fellow users keep each other updated about cool stuff to do in their area. Is there any awesome show in your neighborhood? A new shop is opening up? |
 | description   | Description of this channel.                                 |
 | followerCount | Count of the number of users in the local area that are currently following this channel. |
+
+## Functional Processes
+
+### Signup
+
+| Functional<br/>User | Sub-process<br/>Description                                  | Data Group                         | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------------------------------- | ---------------------- | ---- |
+| User                | User enters his details                                      | User details                       | E                      | 1    |
+|                     | Server validates the entered data and checks if the User already exists | User details                       | R                      | 1    |
+| E-mail<br/>provider | Server sends activation code to user's email                 | Activation record                  | X                      | 1    |
+|                     | Server creates a new User                                    | User details and Activation record | W                      | 1    |
+| User                | App displays confirmation/error message                      | Confirmation  /Error message       | X                      | 1    |
+
+**Total: 5  CFP**
+
+### Activate App
+
+| Functional User | Sub-process Description                  | Data Group                   | Data Mvmt Type | CFP  |
+| --------------- | ---------------------------------------- | ---------------------------- | -------------- | ---- |
+| User            | User enters Activation record            | Activation record            | E              | 1    |
+|                 | Server validates the Activation record   | Activation record            | R              | 1    |
+|                 | App save Activation record in the device | Activation record            | W              | 1    |
+| User            | App displays confirmation/error message  | Confirmation  /Error message | X              | 1    |
+
+**Total: 4 CFP**
+
+### Initialize Location
+
+| Functional User  | Sub-process Description      | Data Group      | Data Mvmt Type | CFP  |
+| ---------------- | ---------------------------- | --------------- | -------------- | ---- |
+| User             | User starts App              | Control Command | E              | 1    |
+| Location Service | App gets User Location       | User Location   | E              | 1    |
+|                  | Server updates User Location | Device Location | W              | 1    |
+| User             | App displays error message   | Error message   | X              | 1    |
+
+**Total: 4 CFP**
+
+### List Recent Posts
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see recent posts                             | Control Command                                              | E              | 1    |
+|                 | Server gets original posts close to the User ordered by date-time descending. <br/>If there is less than 60 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts.<br/>Don't display figures, only &ldquo;Hold to view&rdquo; button. | distance, time, message, vote count, reply count, sharing count<br/> | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total: 6 CFP**
+
+### List My Voted Posts
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see My Votes                                 | Control Command                                              | E              | 1    |
+|                 | Server gets original posts upvoted by the User ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total: 6 CFP**
+
+### List My Replied Posts
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see My Replies                               | Control Command                                              | E              | 1    |
+|                 | Server gets original posts that the User replied ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total: 6 CFP**
+
+### List My Pinned Posts
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see My Pins                                  | Control Command                                              | E              | 1    |
+|                 | Server gets original posts the User pinned ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts. Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total 6 CFP**
+
+### List Popular Posts
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see popular posts.                           | Control Command                                              | E              | 1    |
+|                 | Server gets original posts close to the User ordered by votes descending.<br/> If there is less than 60 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total 6 CFP**
+
+### List a Channel
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see posts.                                   | Control Command                                              | E              | 1    |
+|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>If there is a boosted post of the channel in the area, put it on top. | Post                                                         | R              | 3    |
+| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total 6 CFP**
 
