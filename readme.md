@@ -16,7 +16,7 @@
 | color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have six colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
-| distance    | One of the following:<br />&bull; here (less than 1 km)<br />&bull; very-close (between 1 and 2 km)<br />&bull; close (between 2 and 10 km)<br />&bull; far (more than 10 km)<br />&bull; hometown (posted from a different location using hometown feature) |
+| distance    | One of the following:<br />&bull; here (less than 1 km)<br />&bull; very-close (between 1 and 2 km)<br />&bull; close (between 2 and 10 km)<br />&bull; far (more than 10 km)<br />&bull; hometown (posted from a different location using hometown feature)<br/><br/>For distances less than 1000 kilometers, the distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>) can be calculated with very good accuracy by the following formula:<br/><br/> <a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\phi_1-\phi_0)^2&plus;((\lambda_1-\lambda_0)\cos\phi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\phi_1-\phi_0)^2&plus;((\lambda_1-\lambda_0)\cos\phi_0)^2}" title="d = 111.2 \sqrt{(\phi_1-\phi_0)^2+((\lambda_1-\lambda_0)\cos\phi_0)^2}" /></a><br/><br/>For instance, the distance between Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), calculated using the above formula we get 360.0 km. Using the more accurate but more complex Haversine formula, we get 360.8 km. |
 | city        | Name of the city. e.g.: São Paulo                            |
 | createdAt   | Date-time of the post                                        |
 | childCount  | For original post, it is the number of replies.<br />For replies, it is 0. |
@@ -76,101 +76,104 @@
 
 ### Signup
 
-| Functional<br/>User | Sub-process<br/>Description                                  | Data Group                         | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ---------------------------------- | ---------------------- | ---- |
-| User                | User enters his details                                      | User details                       | E                      | 1    |
-|                     | Server validates the entered data and checks if the User already exists | User details                       | R                      | 1    |
-| E-mail<br/>provider | Server sends activation code to user's email                 | Activation record                  | X                      | 1    |
-|                     | Server creates a new User                                    | User details and Activation record | W                      | 1    |
-| User                | App displays confirmation/error message                      | Confirmation  /Error message       | X                      | 1    |
+| Functional<br/>User | Sub-process<br/>Description                                  | Data Group                   | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------------------------- | ---------------------- | ---- |
+| User                | User enters his details                                      | User                         | E                      | 1    |
+|                     | Server validates the entered data and checks if the User already exists | User                         | R                      | 1    |
+| E-mail<br/>provider | Server sends activation code to the User's email             | Activation record            | X                      | 1    |
+|                     | Server creates a new User                                    | User                         | W                      | 1    |
+| User                | App displays confirmation/error message                      | Confirmation  /Error message | X                      | 1    |
 
 **Total: 5  CFP**
 
 ### Activate App
 
-| Functional User | Sub-process Description                  | Data Group                   | Data Mvmt Type | CFP  |
-| --------------- | ---------------------------------------- | ---------------------------- | -------------- | ---- |
-| User            | User enters Activation record            | Activation record            | E              | 1    |
-|                 | Server validates the Activation record   | Activation record            | R              | 1    |
-|                 | App save Activation record in the device | Activation record            | W              | 1    |
-| User            | App displays confirmation/error message  | Confirmation  /Error message | X              | 1    |
+| Functional User | Sub-process Description                    | Data Group                    | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------ | ----------------------------- | -------------- | ---- |
+| User            | User enters Activation Record              | Activation Record             | E              | 1    |
+|                 | Server authenticates the Activation Record | Activation Record             | R              | 1    |
+|                 | App save Activation Record in the device   | Activation Record             | W              | 1    |
+| User            | App displays confirmation/error message    | Confirmation  / Error message | X              | 1    |
 
 **Total: 4 CFP**
 
-### Initialize Location
+### Initialize App
 
-| Functional User  | Sub-process Description      | Data Group      | Data Mvmt Type | CFP  |
-| ---------------- | ---------------------------- | --------------- | -------------- | ---- |
-| User             | User starts App              | Control Command | E              | 1    |
-| Location Service | App gets User Location       | User Location   | E              | 1    |
-|                  | Server updates User Location | Device Location | W              | 1    |
-| User             | App displays error message   | Error message   | X              | 1    |
+| Functional User  | Sub-process Description                                      | Data Group         | Data Mvmt Type | CFP  |
+| ---------------- | ------------------------------------------------------------ | ------------------ | -------------- | ---- |
+| User             | User starts App.                                             | Control Command    | E              | 1    |
+|                  | App retrieves the Activation Record.                         | Activation Record  | R              | 1    |
+|                  | Server authenticates the User's Activation Record and returns a JWT Access Token, valid for 24 hours. | User, Access Token | R              | 1    |
+|                  | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W              | 1    |
+| Location Service | App gets User Location                                       | User Location      | E              | 1    |
+|                  | Server updates User Location                                 | Device Location    | W              | 1    |
+| User             | App displays error message                                   | Error message      | X              | 1    |
 
-**Total: 4 CFP**
+**Total: 7 CFP**
 
-### List Recent Posts
+### Display Recent Feed
 
 | Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see recent posts                             | Control Command                                              | E              | 1    |
-|                 | Server gets original posts close to the User ordered by date-time descending. <br/>If there is less than 60 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 3    |
+| User            | User demands to see recent feed                              | Control Command                                              | E              | 1    |
+|                 | Server gets original posts close to the user ordered by date-time descending. <br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts from the country.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 4    |
 | User            | Display the list of Posts.<br/>Don't display figures, only &ldquo;Hold to view&rdquo; button. | distance, time, message, vote count, reply count, sharing count<br/> | X              | 1    |
 | User            | System displays error message                                | Error message                                                | X              | 1    |
 
-**Total: 6 CFP**
+**Total: 7 CFP**
 
-### List My Voted Posts
+### Display Popular Feed
 
 | Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Votes                                 | Control Command                                              | E              | 1    |
-|                 | Server gets original posts upvoted by the User ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | User selects to see popular feed.                            | Control Command                                              | E              | 1    |
+|                 | Server gets original posts close to the User ordered by votes descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/> If there is less than 10 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 4    |
 | User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
 | User            | System displays error message                                | Error message                                                | X              | 1    |
 
-**Total: 6 CFP**
+**Total 7 CFP**
 
-### List My Replied Posts
+### Display My Votes Feed
 
 | Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Replies                               | Control Command                                              | E              | 1    |
-|                 | Server gets original posts that the User replied ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | User selects to see My Votes Feed                            | Control Command                                              | E              | 1    |
+|                 | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
+| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
+| User            | System displays error message                                | Error message                                                | X              | 1    |
+
+**Total: 5 CFP**
+
+### Display My Replies Feed
+
+| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
+| User            | User selects to see My Replies Feed                          | Control Command                                              | E              | 1    |
+|                 | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
 | User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
 | User            | System displays error message                                | Error message                                                | X              | 1    |
 
-**Total: 6 CFP**
+**Total: 5 CFP**
 
-### List My Pinned Posts
+### Display My Pins Feed
 
 | Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Pins                                  | Control Command                                              | E              | 1    |
-|                 | Server gets original posts the User pinned ordered by date-time descending. | Post                                                         | R              | 3    |
+| User            | User selects to see My Pins Feed                             | Control Command                                              | E              | 1    |
+|                 | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
 | User            | Display the list of Posts. Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
 | User            | System displays error message                                | Error message                                                | X              | 1    |
 
-**Total 6 CFP**
-
-### List Popular Posts
-
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see popular posts.                           | Control Command                                              | E              | 1    |
-|                 | Server gets original posts close to the User ordered by votes descending.<br/> If there is less than 60 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 3    |
-| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
-
-**Total 6 CFP**
+**Total 5 CFP**
 
 ### List a Channel
 
 | Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
 | --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
 | User            | User selects to see posts.                                   | Control Command                                              | E              | 1    |
-|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>If there is a boosted post of the channel in the area, put it on top. | Post                                                         | R              | 3    |
+|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post                                                         | R              | 4    |
 | User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
 | User            | System displays error message                                | Error message                                                | X              | 1    |
 
-**Total 6 CFP**
+**Total 7 CFP**
 
