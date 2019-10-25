@@ -113,67 +113,67 @@
 
 ### Display Recent Feed
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User demands to see recent feed                              | Control Command                                              | E              | 1    |
-|                 | Server gets original posts close to the user ordered by date-time descending. <br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts from the country.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 4    |
-| User            | Display the list of Posts.<br/>Don't display figures, only &ldquo;Hold to view&rdquo; button. | distance, time, message, vote count, reply count, sharing count<br/> | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User demands to see recent feed                              | Control Command | E              | 1    |
+|                 | Server gets original posts close to the user ordered by date-time descending. <br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts from the country.<br/>If there is a boosted post in the area, put it on top. | Post            | R              | 4    |
+| User            | Display the list of Posts.<br/>Don't display figures, only &ldquo;Hold to view&rdquo; button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total: 7 CFP**
 
 ### Display Popular Feed
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see popular feed.                            | Control Command                                              | E              | 1    |
-|                 | Server gets original posts close to the User ordered by votes descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/> If there is less than 10 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post                                                         | R              | 4    |
-| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User selects to see popular feed.                            | Control Command | E              | 1    |
+|                 | Server gets original posts close to the User ordered by votes descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/> If there is less than 10 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post            | R              | 4    |
+| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total 7 CFP**
 
 ### Display My Votes Feed
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Votes Feed                            | Control Command                                              | E              | 1    |
-|                 | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
-| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User selects to see My Votes Feed                            | Control Command | E              | 1    |
+|                 | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
+| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total: 5 CFP**
 
 ### Display My Replies Feed
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Replies Feed                          | Control Command                                              | E              | 1    |
-|                 | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
-| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User selects to see My Replies Feed                          | Control Command | E              | 1    |
+|                 | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
+| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total: 5 CFP**
 
 ### Display My Pins Feed
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see My Pins Feed                             | Control Command                                              | E              | 1    |
-|                 | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post                                                         | R              | 2    |
-| User            | Display the list of Posts. Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User selects to see My Pins Feed                             | Control Command | E              | 1    |
+|                 | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
+| User            | Display the list of Posts. Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total 5 CFP**
 
 ### List a Channel
 
-| Functional User | Sub-process Description                                      | Data Group                                                   | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | -------------- | ---- |
-| User            | User selects to see posts.                                   | Control Command                                              | E              | 1    |
-|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post                                                         | R              | 4    |
-| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | distance, time, message, vote count, reply count, sharing count | X              | 1    |
-| User            | System displays error message                                | Error message                                                | X              | 1    |
+| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
+| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
+| User            | User selects to see posts.                                   | Control Command | E              | 1    |
+|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post            | R              | 4    |
+| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
+| User            | System displays error message                                | Error message   | X              | 1    |
 
 **Total 7 CFP**
 
