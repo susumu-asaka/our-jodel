@@ -88,12 +88,12 @@
 
 ### Activate App
 
-| Functional User | Sub-process Description                    | Data Group                    | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------ | ----------------------------- | -------------- | ---- |
-| User            | User enters Activation Record              | Activation Record             | E              | 1    |
-|                 | Server authenticates the Activation Record | Activation Record             | R              | 1    |
-|                 | App save Activation Record in the device   | Activation Record             | W              | 1    |
-| User            | App displays confirmation/error message    | Confirmation  / Error message | X              | 1    |
+| Functional User | Sub-process Description                    | Data Group                    | Data<br/>Mvmt<br/>Type | CFP  |
+| --------------- | ------------------------------------------ | ----------------------------- | ---------------------- | ---- |
+| User            | User enters Activation Record              | Activation Record             | E                      | 1    |
+|                 | Server authenticates the Activation Record | Activation Record             | R                      | 1    |
+|                 | App save Activation Record in the device   | Activation Record             | W                      | 1    |
+| User            | App displays confirmation/error message    | Confirmation  / Error message | X                      | 1    |
 
 **Total: 4 CFP**
 
