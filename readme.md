@@ -16,7 +16,7 @@
 | color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have six colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
-| distance    | One of the following:<br />&bull; here (less than 1 km)<br />&bull; very-close (between 1 and 2 km)<br />&bull; close (between 2 and 10 km)<br />&bull; far (more than 10 km)<br />&bull; hometown (posted from a different location using hometown feature)<br/><br/>For distances less than 1000 kilometers, the distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>) can be calculated with very good accuracy by the following simple formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>calculated using the above formula we get 360.0 km. <br/>Using the more accurate Haversine formula, we get 360.8 km. |
+| distance    | One of the following:<br />&bull; here: less than 1 km;<br />&bull; very-close: between 1 and 2 km;<br />&bull; close: between 2 and 10 km;<br />&bull; far: more than 10 km;<br />&bull; hometown: posted from a different location using hometown feature. The hometown feature allows you to use the app as you where in a chosen area, hometown, even if you are not physically there .<br/><br/>The home feed always displays those posts closer than 10 km or hometown before those farther than 10 km. <br/><br/>The distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>), where latitude &phi; and longitude &lambda; are in degrees,  can be calculated by the following approximate formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>This approximation is very fast and produces fairly accurate result for small distances. Also in ordering locations by distance, it is much faster to order by squared distance eliminating the need for computing the square root.<br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>calculated using the above formula we get 360.0 km. <br/>Using an [accurate geodesic calculator](https://geographiclib.sourceforge.io/cgi-bin/GeodSolve?type=I&input=-23.5503+-46.6334+-22.9028+-43.1733&format=g&azi2=f&unroll=r&prec=3&radius=6378137&flattening=1%2F298.257223563&option=Submit), we get 361.1 km. |
 | city        | Name of the city. e.g.: São Paulo                            |
 | createdAt   | Date-time of the post                                        |
 | childCount  | For original post, it is the number of replies.<br />For replies, it is 0. |
@@ -56,7 +56,7 @@
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| title     | The title of the boosted post.<br/><br/>The post will be boosted in the area of a 10 km radius circle around the point of placement.<br/>In each area, there can be only one boosted post at a time.<br/>Therefore the distance between two simultaneous boosted posts should always be longer than 20 km. |
+| title     | The title of the boosted post.<br/><br/>The post will be boosted in the area of a 10 km radius circle around the point of placement.<br/>In each area, there can be only one boosted post at a time. Therefore the distance between two simultaneous boosted posts should always be longer than 20 km.<br/>The boosted post appears first in the User's feed.<br/>Each boosted post is a regular post, thus Users can vote or reply on it (replying can be optionally disabled by the poster). Only difference: if the User downvote it, the post will disappear for the User. |
 | url       | The URL of the ad.                                           |
 | startTime | Date and time of the placement.                              |
 | endTime   | Date and time of the removal.                                |
@@ -68,7 +68,7 @@
 
 | Attribute     | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
-| **name**      | Unique identifier of channel, CamelCase style. <br />At first, users will not be able to create their own channels, but will be able to post and follow the ones we will create.<br/>Like everything in Jodel, the channels will also have local coverage. When a user follows a channel, everything others post to the channel within the 10km radius circle will automatically appear in his home feed.<br/>Here are some channels we consider important for every local community:<br/>&bullet; **PerguntasLocais**: This is a part of this local community that aims to deliver a great local question & answer experience. What was the loud noise 2 minutes ago all about? Why do all people nearby suddenly wear red sneakers? This is a place to help each other and satisfy users' curiosity.<br/>&bullet; **CommunidadeAnimal** is the home for all of our pet lovers. Here users can get their daily dose of cuteness to get them through a rough day.<br/>&bullet; **AcontecendoHoje!** is the place where fellow users keep each other updated about cool stuff to do in their area. Is there any awesome show in your neighborhood? A new shop is opening up? |
+| **name**      | Unique identifier of channel, CamelCase style. <br />Users will not be able to create their own channels, but will be able to follow the ones we will create.<br/>The posts on a channel appears only on the home feed of the users that follow it. |
 | description   | Description of this channel.                                 |
 | followerCount | Count of the number of users in the local area that are currently following this channel. |
 
@@ -76,7 +76,7 @@
 
 ### Signup
 
-| Functional<br/>User | Sub-process<br/>Description                                  | Data Group                   | Data<br/>Mvmt<br/>Type | CFP  |
+| Functional<br/>User | Sub-process Description                                      | Data Group                   | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ---------------------------- | ---------------------- | ---- |
 | User                | User enters his details                                      | User                         | E                      | 1    |
 |                     | Server validates the entered data and checks if the User already exists | User                         | R                      | 1    |
@@ -88,92 +88,103 @@
 
 ### Activate App
 
-| Functional User | Sub-process Description                    | Data Group                    | Data<br/>Mvmt<br/>Type | CFP  |
-| --------------- | ------------------------------------------ | ----------------------------- | ---------------------- | ---- |
-| User            | User enters Activation Record              | Activation Record             | E                      | 1    |
-|                 | Server authenticates the Activation Record | Activation Record             | R                      | 1    |
-|                 | App save Activation Record in the device   | Activation Record             | W                      | 1    |
-| User            | App displays confirmation/error message    | Confirmation  / Error message | X                      | 1    |
+| Functional<br/>User | Sub-process Description                    | Data Group                    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------ | ----------------------------- | ---------------------- | ---- |
+| User                | User enters Activation Record              | Activation Record             | E                      | 1    |
+|                     | Server authenticates the Activation Record | Activation Record             | R                      | 1    |
+|                     | App save Activation Record in the device   | Activation Record             | W                      | 1    |
+| User                | App displays confirmation/error message    | Confirmation  / Error message | X                      | 1    |
 
 **Total: 4 CFP**
 
 ### Initialize App
 
-| Functional User  | Sub-process Description                                      | Data Group         | Data Mvmt Type | CFP  |
-| ---------------- | ------------------------------------------------------------ | ------------------ | -------------- | ---- |
-| User             | User starts App.                                             | Control Command    | E              | 1    |
-|                  | App retrieves the Activation Record.                         | Activation Record  | R              | 1    |
-|                  | Server authenticates the User's Activation Record and returns a JWT Access Token, valid for 24 hours. | User, Access Token | R              | 1    |
-|                  | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W              | 1    |
-| Location Service | App gets User Location                                       | User Location      | E              | 1    |
-|                  | Server updates User Location                                 | Device Location    | W              | 1    |
-| User             | App displays error message                                   | Error message      | X              | 1    |
+| Functional<br/> User | Sub-process Description                                      | Data Group         | Data<br/>Mvmt<br/>Type | CFP  |
+| -------------------- | ------------------------------------------------------------ | ------------------ | ---------------------- | ---- |
+| User                 | User starts App.                                             | Control Command    | E                      | 1    |
+|                      | App retrieves the Activation Record.                         | Activation Record  | R                      | 1    |
+|                      | Server authenticates the User's Activation Record and returns a JWT Access Token, valid for 24 hours. | User, Access Token | R                      | 1    |
+|                      | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W                      | 1    |
+| Location Service     | App gets User Location                                       | User Location      | E                      | 1    |
+|                      | Server updates User Location                                 | Device Location    | W                      | 1    |
+| User                 | App displays error message                                   | Error message      | X                      | 1    |
 
 **Total: 7 CFP**
 
-### Display Recent Feed
+### Display Newest Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User demands to see recent feed                              | Control Command | E              | 1    |
-|                 | Server gets original posts close to the user ordered by date-time descending. <br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts from the country.<br/>If there is a boosted post in the area, put it on top. | Post            | R              | 4    |
-| User            | Display the list of Posts.<br/>Don't display figures, only &ldquo;Hold to view&rdquo; button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group       | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ---- |
+| User                | User clicks &ldquo;Newest&rdquo; Button and can optionally choose to read only one channel that he follows. | Optional Channel | E                      | 1    |
+|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending createdAt.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post             | R                      | 3    |
+| User                | Display the list of Posts.<br/>Don't display images, only &ldquo;Hold to view&rdquo; Button. | Post             | X                      | 1    |
+| User                | System displays error message                                | Error message    | X                      | 1    |
 
-**Total: 7 CFP**
+**Total: 6 CFP**
 
-### Display Popular Feed
+### Display Most Discussed Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User selects to see popular feed.                            | Control Command | E              | 1    |
-|                 | Server gets original posts close to the User ordered by votes descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/> If there is less than 10 close posts, append far posts.<br/>If there is a boosted post in the area, put it on top. | Post            | R              | 4    |
-| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group       | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ---- |
+| User                | User clicks &ldquo;Most discussed&rdquo; Button and can optionally choose to read only one channel that he follows. | Optional Channel | E                      | 1    |
+|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending childCount.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post             | R                      | 3    |
+| User                | Display the list of Posts.<br/>Don't display images, only &ldquo;Hold to view&rdquo; Button. | Post             | X                      | 1    |
+| User                | System displays error message                                | Error message    | X                      | 1    |
+
+**Total: 6 CFP**
+
+### Display Loudest Feed
+
+| Functional<br/>User | Sub-process Description                                      | Data Group       | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ---- |
+| User                | User clicks &ldquo;Loudest&rdquo; Button and can optionally choose to read only one channel that he follows. | Optional Channel | E                      | 1    |
+|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending voteCount.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post             | R                      | 3    |
+| User                | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post             | X                      | 1    |
+| User                | System displays error message                                | Error message    | X                      | 1    |
 
 **Total 7 CFP**
 
 ### Display My Votes Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User selects to see My Votes Feed                            | Control Command | E              | 1    |
-|                 | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
-| User            | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
+| User                | User selects to see My Votes Feed                            | Control Command | E                      | 1    |
+|                     | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
+| User                | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
+| User                | System displays error message                                | Error message   | X                      | 1    |
 
 **Total: 5 CFP**
 
 ### Display My Replies Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User selects to see My Replies Feed                          | Control Command | E              | 1    |
-|                 | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
-| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
+| User                | User selects to see My Replies Feed                          | Control Command | E                      | 1    |
+|                     | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
+| User                | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
+| User                | System displays error message                                | Error message   | X                      | 1    |
 
 **Total: 5 CFP**
 
 ### Display My Pins Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User selects to see My Pins Feed                             | Control Command | E              | 1    |
-|                 | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R              | 2    |
-| User            | Display the list of Posts. Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
+| User                | User selects to see My Pins Feed                             | Control Command | E                      | 1    |
+|                     | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
+| User                | Display the list of Posts. Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
+| User                | System displays error message                                | Error message   | X                      | 1    |
 
 **Total 5 CFP**
 
-### List a Channel
+### Display Channel Feed
 
-| Functional User | Sub-process Description                                      | Data Group      | Data Mvmt Type | CFP  |
-| --------------- | ------------------------------------------------------------ | --------------- | -------------- | ---- |
-| User            | User selects to see posts.                                   | Control Command | E              | 1    |
-|                 | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post            | R              | 4    |
-| User            | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X              | 1    |
-| User            | System displays error message                                | Error message   | X              | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User selects to see posts of a Channel                       | Channel       | E                      | 1    |
+|                     | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post          | R                      | 4    |
+| User                | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post          | X                      | 1    |
+| User                | System displays error message                                | Error message | X                      | 1    |
 
 **Total 7 CFP**
 
