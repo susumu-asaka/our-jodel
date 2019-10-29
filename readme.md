@@ -54,12 +54,12 @@
 
 #### BoostedPostBooking
 
-<img src="./Screenshot_2019-10-28-20-54-55.png" alt="Data Model" style="zoom:25%;" />
+![Boosted Post](./boosted_post.png)
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| headline  | The headline of the url. E.g.: **Hier geht's Urban Farming Berlin** 😊<br/><br/>The post will be boosted in the area of a 10 km radius circle around the point of placement.<br/>In each area, there can be only one boosted post at a time. Therefore the distance between two simultaneous boosted posts should always be longer than 20 km.<br/>The boosted post appears first in the User's feed.<br/>Each boosted post is a regular post, thus Users can vote or reply on it (replying can be optionally disabled by the poster). Only difference: if the User downvote it, the post will disappear for the User. |
-| url       | The URL of the ad. E.g.: https://www.ks-innovationlab.com/projekte/urban-farming-app/ |
+| headline  | The headline of the url. E.g.: **Jetzt Freikarte sichern!** <br/><br/>The post will be boosted in the area of a 10 km radius circle around the point of placement.<br/>In each area, there can be only one boosted post at a time. Therefore the distance between two simultaneous boosted posts should always be longer than 20 km.<br/>The boosted post appears first in the User's feed.<br/>Each boosted post is a regular post, thus Users can vote or reply on it (replying can be optionally disabled by the poster). Only difference: if the User downvote it, the post will disappear for the User. |
+| url       | The URL of the ad. E.g.: https://www.vodafone.de/freikarten/callya-digital |
 | startTime | Date and time of the booking.                                |
 | endTime   | Date and time of the removal.                                |
 | latitude  | This is the signed latitude of the point of placement, in degrees, with precision of 5 decimal places. |
@@ -119,42 +119,20 @@
 
 #### Display Feed
 
-<img src="./Screenshot_2019-10-28-17-20-27.png" alt="Data Model" style="zoom:25%;" />
+![Feed](./feed.png)
 
 
 
-<img src="./Screenshot_2019-10-28-19-25-19.png" alt="Data Model" style="zoom:25%;" />
+![Channels](./channels.png)
 
-| Functional<br/>User | Sub-process Description                                      | Data Group                 | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | -------------------------- | ---------------------- | ---- |
-| User                | User can choose to read his entire feed (default) or of one of the channels, clicking the channel button and selecting the channel from the list of the channels that he follows .<br/>He can choose to read feed from his current GPS location or hometown.<br/>He clicks &#x1f553; button. | Location, Optional Channel | E                      | 1    |
-|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending createdAt.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post                       | R                      | 3    |
-| User                | Display the list of Posts.<br/>Don't display images, only &ldquo;Hold to view&rdquo; Button. | Post                       | X                      | 1    |
-| User                | System displays error message                                | Error message              | X                      | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group         | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------------ | ---------------------- | ---- |
+| User                | User can choose to read his entire feed (default) or of one of his channels by clicking the channel button and selecting the channel from the list of his channels.<br/>User can choose to read feed from his current GPS location or hometown by selecting location on the city drop-down button.<br/>User can select order of posts by clicking one of buttons on the bottom:<br/> &bullet; &#x1f553; **Newest**: reverse chronological;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending. | Location,  Channel | E                      | 3    |
+|                     | App queries 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post               | R                      | 2    |
+| User                | Display the list of Posts.                                   | Post               | X                      | 1    |
+| User                | System displays error message                                | Error message      | X                      | 1    |
 
-**Total: 6 CFP**
-
-### Display Most Discussed Feed
-
-| Functional<br/>User | Sub-process Description                                      | Data Group       | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ---- |
-| User                | User clicks &ldquo;Most discussed&rdquo; Button and can optionally choose to read only one channel that he follows. | Optional Channel | E                      | 1    |
-|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending childCount.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post             | R                      | 3    |
-| User                | Display the list of Posts.<br/>Don't display images, only &ldquo;Hold to view&rdquo; Button. | Post             | X                      | 1    |
-| User                | System displays error message                                | Error message    | X                      | 1    |
-
-**Total: 6 CFP**
-
-### Display Loudest Feed
-
-| Functional<br/>User | Sub-process Description                                      | Data Group       | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ---------------- | ---------------------- | ---- |
-| User                | User clicks &ldquo;Loudest&rdquo; Button and can optionally choose to read only one channel that he follows. | Optional Channel | E                      | 1    |
-|                     | Server gets originals posts from the Channels that the User follows or that channel is null.<br/>Those closer than 10 km or hometown are displayed before those farther than 10 km.<br/>Within each group, posts are sorted by descending voteCount.<br/>Load 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post             | R                      | 3    |
-| User                | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post             | X                      | 1    |
-| User                | System displays error message                                | Error message    | X                      | 1    |
-
-**Total 7 CFP**
+**Total: 7 CFP**
 
 ### Display My Votes Feed
 
@@ -162,8 +140,8 @@
 | ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
 | User                | User selects to see My Votes Feed                            | Control Command | E                      | 1    |
 |                     | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
-| User                | Display the list of Posts.<br/>Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
-| User                | System displays error message                                | Error message   | X                      | 1    |
+| User                | Display the list of Posts                                    | Post            | X                      | 1    |
+| User                | App displays error message                                   | Error message   | X                      | 1    |
 
 **Total: 5 CFP**
 
@@ -174,7 +152,7 @@
 | User                | User selects to see My Replies Feed                          | Control Command | E                      | 1    |
 |                     | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
 | User                | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
-| User                | System displays error message                                | Error message   | X                      | 1    |
+| User                | App displays error message                                   | Error message   | X                      | 1    |
 
 **Total: 5 CFP**
 
