@@ -125,12 +125,16 @@
 
 ![Channels](./channels.png)
 
-| Functional<br/>User | Sub-process Description                                      | Data Group         | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------------ | ---------------------- | ---- |
-| User                | User can choose to read his entire feed (default) or of one of his channels by clicking the channel button and selecting the channel from the list of his channels.<br/>User can choose to read feed from his current GPS location or hometown by selecting location on the city drop-down button.<br/>User can select order of posts by clicking one of buttons on the bottom:<br/> &bullet; &#x1f553; **Newest**: reverse chronological;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending. | Location,  Channel | E                      | 3    |
-|                     | App queries 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post               | R                      | 2    |
-| User                | Display the list of Posts.                                   | Post               | X                      | 1    |
-| User                | System displays error message                                | Error message      | X                      | 1    |
+
+
+![Channels](./feed_channel.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group                  | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------------------- | ---------------------- | ---- |
+| User                | User can choose to read his entire feed (default) or of one of his channels by clicking the channel button and selecting the channel from the list of his channels.<br/>User can select to read feed from his current GPS location or hometown on the city drop-down button.<br/>User can select order of posts by clicking one of buttons on the bottom:<br/> &bullet; &#x1f553; **Newest**: reverse chronological;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending. | Location, Optional  Channel | E                      | 3    |
+|                     | App queries 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post                        | R                      | 2    |
+| User                | Display the list of Posts.                                   | Post                        | X                      | 1    |
+| User                | System displays error message                                | Error message               | X                      | 1    |
 
 **Total: 7 CFP**
 
