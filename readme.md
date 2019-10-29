@@ -9,6 +9,8 @@
 
 #### Post
 
+![Boosted Post](./post.png)
+
 | Attribute   | Description                                                  |
 | ----------- | ------------------------------------------------------------ |
 | message     | Text can have length up to 240 characters.                   |
