@@ -14,7 +14,7 @@
 | Attribute   | Description                                                  |
 | ----------- | ------------------------------------------------------------ |
 | message     | Text can have length up to 240 characters.                   |
-| imageBase64 | Image encoded base 64.                                       |
+| imageBase64 | Image encoded base 64. Can be a very short video, up to 20 seconds. |
 | color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have seven colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
@@ -131,56 +131,77 @@
 
 ![Channels](./feed_channel.png)
 
-| Functional<br/>User | Sub-process Description                                      | Data Group                  | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | --------------------------- | ---------------------- | ---- |
-| User                | User can choose to read his entire feed (default) or of one of his channels by clicking the channel button and selecting the channel from the list of his channels.<br/>User can select to read feed from his current GPS location or hometown on the city drop-down button.<br/>User can select order of posts by clicking one of buttons on the bottom:<br/> &bullet; &#x1f553; **Newest**: reverse chronological;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending. | Location, Optional  Channel | E                      | 3    |
-|                     | App queries 10 posts at a time as the user scrolls down through the feed screen.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post                        | R                      | 2    |
-| User                | Display the list of Posts.                                   | Post                        | X                      | 1    |
-| User                | System displays error message                                | Error message               | X                      | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+|                     | After initialization, the App retrieves newest posts in the area. | Post          | R                      | 1    |
+|                     | The App display newest posts.                                | Post          | X                      | 1    |
+| User                | User can choose the entire feed (default) or only one of his channels by clicking the channel button.<br/>In this case, the App retrieves the list of User's Channels and the list of recommended Channels (most popular Channels not followed by the User). | Channel       | R                      | 2    |
+| User                | The App displays the list of User's Channels and the list of recommended Channels.<br/>If there are new original Posts in one of the User's Channels, its name is written in boldface. | Channel       | X                      | 2    |
+| User                | The User can then select the channel he wants to read.       | Channel       | E                      | 1    |
+| User                | The User can select to read feed from his current GPS location or hometown on the City drop-down button.<br/>The User can select order of posts in the feed by clicking one of buttons on the bottom:<br/> &bullet; &#x1f553; **Newest**: reverse chronological (default);<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending. | Location      | E                      | 1    |
+|                     | The App retrieves the posts of the feed.<br/>If there is a boosted post in the area and the User has not downvoted it, put it at the top of the feed. | Post          | R                      | 1    |
+| User                | App displays the scrollable list of Posts.                   | Post          | X                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
 
-**Total: 7 CFP**
+**Total: 11 CFP**
 
-### Display My Votes Feed
+#### Display Picture Feed
 
-| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | User selects to see My Votes Feed                            | Control Command | E                      | 1    |
-|                     | Server gets original posts upvoted by the User ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
-| User                | Display the list of Posts                                    | Post            | X                      | 1    |
-| User                | App displays error message                                   | Error message   | X                      | 1    |
-
-**Total: 5 CFP**
-
-### Display My Replies Feed
-
-| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | User selects to see My Replies Feed                          | Control Command | E                      | 1    |
-|                     | Server gets original posts that the User replied ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
-| User                | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
-| User                | App displays error message                                   | Error message   | X                      | 1    |
-
-**Total: 5 CFP**
-
-### Display My Pins Feed
-
-| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | User selects to see My Pins Feed                             | Control Command | E                      | 1    |
-|                     | Server gets original posts the User pinned ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen. | Post            | R                      | 2    |
-| User                | Display the list of Posts. Don't display figures, only “Hold to view” button. | Post            | X                      | 1    |
-| User                | System displays error message                                | Error message   | X                      | 1    |
-
-**Total 5 CFP**
-
-### Display Channel Feed
+![Feed](./image_post.png)
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User selects to see posts of a Channel                       | Channel       | E                      | 1    |
-|                     | Server gets original posts of a channel, posted close to the User, ordered by date-time descending.<br/>Load 10 posts at a time as the user scrolls through the feed screen.<br/>If there is less than 10 close posts, append far posts.<br/>If there is a boosted post of the channel in the area, put it on top. | Post          | R                      | 4    |
-| User                | Display the list of Posts. <br/>Don't display figures, only “Hold to view” button. | Post          | X                      | 1    |
-| User                | System displays error message                                | Error message | X                      | 1    |
+| User                | In his feed, User hold to view a Picture, then Swipe up  to access Pictures in the Feed after the selected Picture. | Picture       | E                      | 1    |
+|                     | App retrieves 1 picture at a time as User scrolls through the Picture Feed screen. | Picture       | R                      | 1    |
+| User                | Display the current Picture.                                 | Picture       | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
 
-**Total 7 CFP**
+**Total: 4 CFP**
+
+#### Display My Pins
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Pins.<br/>The App retrieves original posts the User pinned in reverse chronological order. | Post          | R                      | 1    |
+| User                | Display the list of Posts.                                   | Post          | X                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total 3 CFP**
+
+#### Display My Replies
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Replies.<br/>The App retrieves original posts the User replied in reverse chronological order. | Post          | R                      | 2    |
+| User                | Display the list of Posts.                                   | Post          | X                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Display My Votes
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Votes.<br/>The App retrieves Original Posts the User upvoted in reverse chronological order, even if the User has voted on a Reply and not on the original Post. | Post          | R                      | 2    |
+| User                | Display the list of Posts                                    | Post          | X                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Hashtag Search
+
+![Hashtag](./hashtag.png)
+
+
+
+![Hashtag Feed](./feed_hashtag.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User clicks on Channels button, at upper left corner of feed screen.<br/>Then, on Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 1    |
+|                     | The App retrieves the original posts, where the hashtag appears in the original post or in one of its replies. | Post          | R                      | 2    |
+| User                | The App displays the list of Posts.                          | Post          | X                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 5 CFP**
 
