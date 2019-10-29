@@ -163,8 +163,8 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Pins.<br/>The App retrieves original posts the User pinned in reverse chronological order. | Post          | R                      | 1    |
-| User                | Display the list of Posts.                                   | Post          | X                      | 1    |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Pins.<br/>The App retrieves original posts the User pinned. | Post          | R                      | 1    |
+| User                | Display the Feed.                                            | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total 3 CFP**
@@ -173,8 +173,8 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Replies.<br/>The App retrieves original posts the User replied in reverse chronological order. | Post          | R                      | 2    |
-| User                | Display the list of Posts.                                   | Post          | X                      | 1    |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Replies.<br/>The App retrieves original posts the User replied. | Post          | R                      | 2    |
+| User                | Display the Feed.                                            | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 4 CFP**
@@ -183,8 +183,8 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Votes.<br/>The App retrieves Original Posts the User upvoted in reverse chronological order, even if the User has voted on a Reply and not on the original Post. | Post          | R                      | 2    |
-| User                | Display the list of Posts                                    | Post          | X                      | 1    |
+| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Votes.<br/>The App retrieves Original Posts the User upvoted, even if the User has voted on a Reply and not on the original Post. | Post          | R                      | 2    |
+| User                | Display the Feed                                             | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 4 CFP**
@@ -201,7 +201,7 @@
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | User clicks on Channels button, at upper left corner of feed screen.<br/>Then, on Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 1    |
 |                     | The App retrieves the original posts, where the hashtag appears in the original post or in one of its replies. | Post          | R                      | 2    |
-| User                | The App displays the list of Posts.                          | Post          | X                      | 1    |
+| User                | The App displays the Feed.                                   | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 5 CFP**
