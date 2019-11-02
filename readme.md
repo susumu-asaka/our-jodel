@@ -18,7 +18,7 @@
 | color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have seven colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
-| distance    | One of the following:<br />&bull; **here**: less than 1 km;<br />&bull; **very-close**: between 1 and 2 km;<br />&bull; **close**: between 2 and 10 km;<br />&bull; **far**: more than 10 km;<br />&bullet; **hometown**: if posted using *hometown* feature.<br/>The *hometown* feature allows users to read and write posts in a place they are not currently in. However, this location must be set once by the user and then it can not be changed. Only the current location of the user can be set as his hometown.<br/><br/>At first, only posts posted within a 10 km radius are shown in the feed. When there are many users in the area, the users enjoy a lot of activity; less populated areas, on the contrary, can spot tumbleweed in their less engaged feeds.<br/>To mitigate this issue we introduce the *dynamic radius* feature. With the dynamic radius the radius will be increased in 10 km steps until the area has 150 posts.<br/> <br/>The distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>), where latitude &phi; and longitude &lambda; are in degrees,  can be calculated by the following approximate formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>This approximation is very fast and produces fairly accurate result for small distances. Also in ordering locations by distance, it is much faster to order by squared distance eliminating the need for computing the square root.<br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>using the above formula, is 360.0 km. <br/>Using an [accurate geodesic calculator](https://geographiclib.sourceforge.io/cgi-bin/GeodSolve?type=I&input=-23.5503+-46.6334+-22.9028+-43.1733&format=g&azi2=f&unroll=r&prec=3&radius=6378137&flattening=1%2F298.257223563&option=Submit), the distance is 361.1 km. |
+| distance    | One of the following:<br />&bull; **here**: less than 1 km;<br />&bull; **very-close**: between 1 and 2 km;<br />&bull; **close**: between 2 and 10 km;<br />&bull; **far**: more than 10 km;<br />&bullet; **hometown**: if posted using *hometown* feature.<br/>The *hometown* feature allows users to read and write posts in a place they are not currently in. However, this location must be set once by the user and then it can not be changed. Only the current location of the user can be set as his hometown.<br/><br/>At first, only posts posted within a 10 km radius are shown in the feed. When there are many users in the area, the users enjoy a lot of activity; less populated areas, on the contrary, can spot tumbleweed in their less engaged feeds.<br/>To mitigate this issue we introduce the *dynamic radius* feature. With the dynamic radius the radius will be increased in 10 km steps until the area has more than 150 original posts or the radius reach 100 km.<br/> <br/>The distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>), where latitude &phi; and longitude &lambda; are in degrees,  can be calculated by the following approximate formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>This approximation is very fast and produces fairly accurate result for small distances. Also in ordering locations by distance, it is much faster to order by squared distance eliminating the need for computing the square root.<br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>using the above formula, is 360.0 km. <br/>Using an [accurate geodesic calculator](https://geographiclib.sourceforge.io/cgi-bin/GeodSolve?type=I&input=-23.5503+-46.6334+-22.9028+-43.1733&format=g&azi2=f&unroll=r&prec=3&radius=6378137&flattening=1%2F298.257223563&option=Submit), the distance is 361.1 km. |
 | city        | Name of the city. e.g.: São Paulo                            |
 | createdAt   | Date-time of the post                                        |
 | childCount  | For original post, it is the number of replies.<br />For replies, it is 0. |
@@ -60,12 +60,13 @@
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| headline  | The headline of the url. E.g.: **Jetzt Freikarte sichern!** <br/><br/>The post will be boosted in the area of a 10 km radius circle around the point of placement.<br/>In each area, there can be only one boosted post at a time. Therefore the distance between two simultaneous boosted posts should always be longer than 20 km.<br/>The boosted post appears first in the User's feed.<br/>Each boosted post is a regular post, thus Users can vote or reply on it (replying can be optionally disabled by the poster). Only difference: if the User downvote it, the post will disappear for the User. |
+| headline  | The headline of the url. E.g.: **Jetzt Freikarte sichern!** <br/><br/>In each area, there can be only one boosted post at a time. <br/>The boosted post appears first in the User's feed.<br/>Each boosted post is a regular post, thus Users can vote or reply on it (replying can be optionally disabled by the poster). Only difference: if the User downvote it, the post will disappear for the User. |
 | url       | The URL of the ad. E.g.: https://www.vodafone.de/freikarten/callya-digital |
 | startTime | Date and time of the booking.                                |
 | endTime   | Date and time of the removal.                                |
 | latitude  | This is the signed latitude of the point of placement, in degrees, with precision of 5 decimal places. |
 | longitude | This is the signed longitude of the point of the placement, in degrees, with precision of 5 decimal places. |
+| radius    | Boosted post coverage radius.                                |
 | canReply  | Flag to enable replies to this placement.                    |
 
 #### Channel
@@ -126,7 +127,7 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | A *Feed* consists of a set of three views listing Original Posts:<br/>&bullet; &#x1f553; **Newest**: in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen. | Control Command | E                      | 1    |
+| User                | A *Feed* consists of a set of three views listing Original Posts only, the Reply Posts does not show up :<br/>&bullet; &#x1f553; **Newest**: in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen. | Control Command | E                      | 1    |
 | User                | App displays a scrollable list of the chosen view.           | Original Post   | X                      | 2    |
 | User                | App displays error message                                   | Error message   | X                      | 1    |
 
@@ -181,7 +182,7 @@
 
 **Total: 5 CFP**
 
-#### Display My Jodels Feed
+#### Display My Posts Feed
 
 ![ME Screen](./ME.png)
 
@@ -192,38 +193,21 @@
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | User clicks on MY KARMA button, at upper right corner of main Feed screen.<br/>The App displays ME screen.<br/>The User clicks on My Jodels button. | User          | E                      | 1    |
-|                     | App retrieves My Jodels Feed:<br/> &bullet; **Newest**: Posts posted by the User, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts posted by the User, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts posted by the User, ordered by vote count descending. | Original Post | R                      | 3    |
+|                     | App retrieves My Posts Feed:<br/> &bullet; **Newest**: Posts posted by the User, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts posted by the User, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts posted by the User, ordered by vote count descending. | Original Post | R                      | 3    |
 | User                | **Display Feed**.                                            | Original Post |                        |      |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total 5 CFP**
 
-#### Display My Replies
+#### Display My Remarks
+
+![My Replies](./my_replies.png)
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Replies.<br/>The App retrieves original posts the User replied. | Post          | R                      | 2    |
-| User                | Display the Feed.                                            | Post          | X                      | 1    |
-| User                | App displays error message                                   | Error message | X                      | 1    |
-
-**Total: 4 CFP**
-
-#### Display My Pins
-
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>The App displays ME screen.<br/>The User clicks on My Pi.<br/>The App retrieves original posts the User pinned. | Post          | R                      | 1    |
-| User                | Display the Feed.                                            | Post          | X                      | 1    |
-| User                | App displays error message                                   | Error message | X                      | 1    |
-
-**Total 3 CFP**
-
-#### Display My Votes
-
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | User clicks on MY KARMA button, at upper right corner of feed screen.<br/>Then, on ME screen, User clicks on My Votes.<br/>The App retrieves Original Posts the User upvoted, even if the User has voted on a Reply and not on the original Post. | Post          | R                      | 2    |
-| User                | Display the Feed                                             | Post          | X                      | 1    |
+| User                | On ME screen, User clicks on My Replies, My Pins or My Votes button. | Remark Kind   | E                      | 1    |
+|                     | The App retrieves posts in reverse chronological order according to the chosen remark kind:<br/> &bullet; **reply**: posts the User replied . Note that the replies does not show up in this screen, only the original posts that the User replied;<br/> &bullet; **pin**: posts the User pinned;<br/> &bullet; **vote**: posts the User upvoted. Note that, even the User upvoted a reply, only original posts appear in this screen, | Original Post | R                      | 1    |
+| User                | Display the retrieved list.                                  | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 4 CFP**
@@ -234,10 +218,35 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | In his feed, User hold to view a Picture, then Swipe up  to access Pictures in the Feed after the selected Picture. | Picture       | E                      | 1    |
-|                     | App retrieves 1 picture at a time as User scrolls through the Picture Feed screen. | Picture       | R                      | 1    |
-| User                | Display the current Picture.                                 | Picture       | X                      | 1    |
+| User                | In Feed Screen, User hold button &ldquo;Hold to view&rdquo; , then Swipe up  to access Picture Feed. | Picture       | E                      | 1    |
+|                     | App retrieves one picture at a time as User scrolls through the Picture Feed screen. | Picture       | R                      | 2    |
+| User                | Display the current Picture with message overlaid.           | Picture       | X                      | 1    |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
-**Total: 4 CFP**
+**Total: 5 CFP**
 
+### Interacting with Single Posts
+
+#### Create Message Post
+
+![Create Post](./create_post.png)
+
+
+
+![Message Post](./message_post.png)
+
+
+
+![Post To](./post_to.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | In Feed Screen, User clicks &ldquo;+&rdquo; button.<br/>App displays enter Post screen.<br/>User types message and clicks &ldquo;Next&rdquo;. | Message       | E                      | 1    |
+|                     | App retrieves User's channels and displays &ldquo;Post To&hellip;&rdquo;  to screen. | Channel       | R                      | 1    |
+| User                | User selects the Channel to post and clicks the SEND button. | Channel       | E                      | 1    |
+|                     | App creates Post.                                            | Original Post | W                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 5 CFP**
