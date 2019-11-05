@@ -11,32 +11,39 @@
 
 ![Boosted Post](./post.png)
 
+A *Post* is a message, picture or video (up to 20 seconds) that is published by a User.
+
+A *Jodel* is a Post that starts a thread.
+
+A *Reply* is a Post written in answer or response to a Jodel.
+
 | Attribute   | Description                                                  |
 | ----------- | ------------------------------------------------------------ |
 | message     | Text can have length up to 240 characters.                   |
 | imageBase64 | Image encoded base 64. Can be a very short video, up to 20 seconds. |
-| color       | The color has no actual meaning. The color is selected randomly when the user press the &ldquo;+&rdquo; button.<br /><br/>Posts can have seven colors:<br />![colors](./colors.png) |
+| user_handle | Consists of a hexadecimal number. This number uniquely identifies the posting user in the thread, i.e. when the first replier makes another reply on the same Jodel,  that reply will have the same user_handle as the first. However, the user_handle is not unique for every user in every thread, i.e. when a replier makes another reply on a different Jodel, that reply will have a different user_handle.<br/>In other words, it is possible to know which replies on a Jodel was made by the same User, but it is not possible to reconstruct a user's Jodel activities from long-time observations.<br/>The *Original Jodeler* is the User who posted the initial Jodel. His user_handle is 0, and his posts on a thread are identified by the initials O.J. |
+| color       | The color has no actual meaning. The color of a Jodel is selected randomly when the user clicks the &ldquo;+&rdquo; button.<br />The color of a Reply is always the same as the color of the parent Jodel.<br/>Posts can have seven colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
-| distance    | One of the following:<br />&bull; **here**: less than 1 km;<br />&bull; **very-close**: between 1 and 2 km;<br />&bull; **close**: between 2 and 10 km;<br />&bull; **far**: more than 10 km;<br />&bullet; **hometown**: if posted using *hometown* feature.<br/>The *hometown* feature allows users to read and write posts in a place they are not currently in. However, this location must be set once by the user and then it can not be changed. Only the current location of the user can be set as his hometown.<br/><br/>At first, only posts posted within a 10 km radius are shown in the feed. When there are many users in the area, the users enjoy a lot of activity; less populated areas, on the contrary, can spot tumbleweed in their less engaged feeds.<br/>To mitigate this issue we introduce the *dynamic radius* feature. With the dynamic radius the radius will be increased in 10 km steps until the area has more than 150 original posts or the radius reach 100 km.<br/> <br/>The distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>), where latitude &phi; and longitude &lambda; are in degrees,  can be calculated by the following approximate formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>This approximation is very fast and produces fairly accurate result for small distances. Also in ordering locations by distance, it is much faster to order by squared distance eliminating the need for computing the square root.<br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>using the above formula, is 360.0 km. <br/>Using an [accurate geodesic calculator](https://geographiclib.sourceforge.io/cgi-bin/GeodSolve?type=I&input=-23.5503+-46.6334+-22.9028+-43.1733&format=g&azi2=f&unroll=r&prec=3&radius=6378137&flattening=1%2F298.257223563&option=Submit), the distance is 361.1 km. |
+| distance    | One of the following:<br />&bull; **here**: less than 1 km;<br />&bull; **very-close**: between 1 and 2 km;<br />&bull; **close**: between 2 and 10 km;<br />&bull; **far**: more than 10 km;<br />&bullet; **hometown**: if posted using *hometown* feature.<br/>The *hometown* feature allows users to read and write posts in a place they are not currently in. However, this location must be set once by the user and then it can not be changed. Only the current location of the user can be set as his hometown.<br/><br/>At first, only posts posted within a 10 km radius are shown in the feed. When there are many users in the area, the users enjoy a lot of activity; less populated areas, on the contrary, can spot tumbleweed in their less engaged feeds.<br/>To mitigate this issue we introduce the *dynamic radius* feature. With the dynamic radius the radius will be increased in 10 km steps until the area has more than 150 Jodels or the radius reach 100 km.<br/> <br/>The distance in kilometers between two points located at (&phi;<sub>0</sub>, &lambda;<sub>0</sub>) and (&phi;<sub>1</sub>, &lambda;<sub>1</sub>), where latitude &phi; and longitude &lambda; are in degrees,  can be calculated by the following approximate formula:<br/><br/><a href="https://www.codecogs.com/eqnedit.php?latex=d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?d&space;=&space;111.2&space;\sqrt{(\varphi_1-\varphi_0)^2&plus;((\lambda_1-\lambda_0)\cos\varphi_0)^2}" title="d = 111.2 \sqrt{(\varphi_1-\varphi_0)^2+((\lambda_1-\lambda_0)\cos\varphi_0)^2}" /></a><br/><br/>This approximation is very fast and produces fairly accurate result for small distances. Also in ordering locations by distance, it is much faster to order by squared distance eliminating the need for computing the square root.<br/>For instance, the distance between <br/>Praça da Sé in São Paulo, at (-23.5503&deg;, -46.6334&deg;) and <br/>Praça XV in Rio de Janeiro, at (-22.9028&deg;, -43.1733&deg;), <br/>using the above formula, is 360.0 km. <br/>Using an [accurate geodesic calculator](https://geographiclib.sourceforge.io/cgi-bin/GeodSolve?type=I&input=-23.5503+-46.6334+-22.9028+-43.1733&format=g&azi2=f&unroll=r&prec=3&radius=6378137&flattening=1%2F298.257223563&option=Submit), the distance is 361.1 km. |
 | city        | Name of the city. e.g.: São Paulo                            |
 | createdAt   | Date-time of the post                                        |
-| childCount  | For original post, it is the number of replies.<br />For replies, it is 0. |
+| childCount  | For Jodel, it is the number of replies.<br />For replies, it is null. |
 | voteCount   | number of upvotes minus number of downvotes. <br />When a post has voteCount of -5 it disappears. |
 
 #### User
 
 | Attribute      | Description                                                  |
 | -------------- | ------------------------------------------------------------ |
-| **email**      | Email address.                                               |
+| **cellphone**  | Cell phone number.                                           |
 | activationCode | Activation code.                                             |
 | latitude       | Signed latitude of user's location, in degrees, with precision of 5 decimal places. |
 | longitude      | Signed longitude of the user's location, in degrees, with precision of 5 decimal places. |
 | location       | Name of the user's location, normally equals to the name of the city. |
 | city           | Name of the city of the the user's location, e.g.: São Paulo |
 | country        | Two letter country code, e.g. BR                             |
-| type           | User's type. Users can have one of 6 types:<br />&bull; **Aprendiz**<br />&bull; **Funcionário**<br />&bull; **Colegial**<br />&bull; **Vestibulando**<br />&bull; **Universitário**<br />&bull; **Outros** |
-| gender         | &ldquo;m&rdquo; or &ldquo;f&rdquo;                           |
+| group          | &bull; **Aprendiz**<br />&bull; **Funcionário**<br />&bull; **Colegial**<br />&bull; **Vestibulando**<br />&bull; **Universitário**<br />&bull; **Pós-graduando**<br/>&bullet; **Empresário / Autônomo**<br/>&bullet; **Servidor Público**<br/>&bullet; **Aposentado** |
+| gender         | &bullet; **male**<br/> &bullet; **female**<br/> &bullet; **other** |
 | birthyear      | User's birthyear with 4 digits.                              |
 | karma          | User's score: <br /> &bull; The user earns (looses) 2 karma for upvoting (downvoting) on a post<br /> &bull; The user earns (looses) 10 karma when he receives an upvote (downvote)<br /> &bull; The user earns 1 karma for thanking another user who replies to his post<br /> &bull; The replier earns 5 karma for receiving thanks. |
 
@@ -44,13 +51,13 @@
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| kind      | One of the following:<br />&bull; **upvote**<br />&bullet; **downvote**<br />&bullet; **subscribe**: when the user posts an original post, reply or pin a thread it gets automatically subscribed<br />&bullet; **thank**: the author can thank for a reply from another user, after upvoting it.<br />&bullet; **pin**. |
+| kind      | One of the following:<br />&bull; **upvote**<br />&bullet; **downvote**<br />&bullet; **subscribe**: when the user posts a Jodel, Reply or pin a Jodel, it gets automatically subscribed<br />&bullet; **thank**: the author can thank for a reply from another user, after upvoting it.<br />&bullet; **pin**. |
 
 #### Notification
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| type      | One of the following:<br />&bullet; **ReplyOnReply**: a reply was posted on a thread, after the user has replied on the same thread<br />&bullet; **ReplyOnOriginal**: a reply was posted on a thread originated from a user's post<br />&bullet; **VoteOnPost**: vote on a post of this user<br />&bullet; **ReplyOnPin**: a reply was posted on a thread pinned by this user |
+| type      | One of the following:<br />&bullet; **ReplyOnReply**: a reply was posted on a thread, after the user has replied on the same thread<br />&bullet; **ReplyOnJodel**: a reply was posted on a User's Jodel<br />&bullet; **VoteOnPost**: vote on a post of this user<br />&bullet; **ReplyOnPin**: a reply was posted on a Jodel pinned by this user |
 | read      | Flag to signal that the notification has been read.          |
 | time      | Date and time of the event.                                  |
 
@@ -73,7 +80,7 @@
 
 | Attribute     | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
-| **name**      | Unique identifier of channel, CamelCase style. <br />Users will not be able to create their own channels, but will be able to follow the ones we will create.<br/>User's feed will show the original posts with no channel and those from the channels followed by him. |
+| **name**      | Unique identifier of channel, CamelCase style. <br />Users will not be able to create their own channels, but will be able to follow the ones we will create.<br/>User's feed will show the Jodels from the channels followed by him. |
 | description   | Description of this channel.                                 |
 | followerCount | Count of the number of users in the local area that are currently following this channel. |
 
@@ -83,26 +90,29 @@
 
 #### Signup
 
+![Gender Question](./gender.png)
+
+![Age Question](./age.png)
+
+![Group Question](./group.png)
+
+![Other Group Question](./other_group.png)
+
+![Contract](./contract.png)
+
 | Functional<br/>User | Sub-process Description                                      | Data Group                   | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ---------------------------- | ---------------------- | ---- |
 | User                | User enters his details                                      | User                         | E                      | 1    |
 |                     | Server validates the entered data and checks if the User already exists | User                         | R                      | 1    |
-| E-mail<br/>provider | Server sends activation code to the User's email             | Activation record            | X                      | 1    |
-|                     | Server creates a new User                                    | User                         | W                      | 1    |
+| SMS<br/>provider    | Server sends text message with activation code,              | Activation record            | X                      | 1    |
+|                     | App waits text message with activation code returns.         | Activation Record            | R                      | 1    |
+|                     | App authenticates the Activation Record                      | Activation Record            | R                      | 1    |
+|                     | App creates a new User                                       | User                         | W                      | 1    |
+|                     | App save Activation Record in the device.                    | Activation Record            | W                      | 1    |
+|                     | **Initialize App**                                           |                              |                        |      |
 | User                | App displays confirmation/error message                      | Confirmation  /Error message | X                      | 1    |
 
-**Total: 5  CFP**
-
-#### Activate App
-
-| Functional<br/>User | Sub-process Description                    | Data Group                    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------ | ----------------------------- | ---------------------- | ---- |
-| User                | User enters Activation Record              | Activation Record             | E                      | 1    |
-|                     | Server authenticates the Activation Record | Activation Record             | R                      | 1    |
-|                     | App save Activation Record in the device   | Activation Record             | W                      | 1    |
-| User                | App displays confirmation/error message    | Confirmation  / Error message | X                      | 1    |
-
-**Total: 4 CFP**
+**Total: 8  CFP**
 
 #### Initialize App
 
@@ -114,7 +124,8 @@
 |                      | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W                      | 1    |
 | Location Service     | App gets User Location                                       | User Location      | E                      | 1    |
 |                      | Server updates User Location                                 | Device Location    | W                      | 1    |
-|                      | App retrieves the nearest 150 posts in order to determine the dynamic radius. | Post               | R                      | 1    |
+|                      | App retrieves the nearest 150 Jodels in order to determine the dynamic radius. | Post               | R                      | 1    |
+|                      | **Display Main Feed**                                        |                    |                        |      |
 | User                 | App displays error message                                   | Error message      | X                      | 1    |
 
 **Total: 8 CFP**
@@ -125,10 +136,14 @@
 
 ![Feed](./feed.png)
 
+
+
+![Refreshing Feed](./refresh.png)
+
 | Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | A *Feed* consists of a set of three views listing Original Posts only, the Reply Posts does not show up :<br/>&bullet; &#x1f553; **Newest**: in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: reply count descending;<br/> &bullet;  &#x2303; **Loudest**: vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen. | Control Command | E                      | 1    |
-| User                | App displays a scrollable list of the chosen view.           | Original Post   | X                      | 2    |
+| User                | A *Feed* consists of a set of three views listing Jodels only, the Replies does not show up :<br/>&bullet; &#x1f553; **Newest**: up to 150 Jodels in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: up to 150 Jodels ordered by child count descending;<br/> &bullet;  ∧ **Loudest**: up to 150 Jodels ordered by vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen.<br/>The Feed is refreshed if the User swipe down on the first page. | Control Command | E                      | 1    |
+| User                | App displays a scrollable list of Jodels from the chosen view. | Jodel           | X                      | 2    |
 | User                | App displays error message                                   | Error message   | X                      | 1    |
 
 **Total: 4 CFP**
@@ -138,7 +153,7 @@
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | The User can select to read feed from his current GPS location or hometown on the City drop-down button at the top of the screen. | Location      | E                      | 1    |
-|                     | App retrieves Main Feed:<br/> &bullet; **Newest**: Posts within the dynamic radius, from User's or main channels, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, from User's or main channels, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, from User's or main channels, posted in the last 7 days, ordered by vote count descending. | Original Post | R                      | 3    |
+|                     | App retrieves Main Feed:<br/> &bullet; **Newest**: Up to 150 Jodels within the dynamic radius, from User's channels, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Up to 150 Jodels within the dynamic radius, from User's channels, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, from User's channels, posted in the last 7 days, ordered by vote count descending. | Jodel         | R                      | 3    |
 | User                | **Display Feed**.                                            | Post          |                        |      |
 | User                | App displays Error message.                                  | Error Message | X                      | 1    |
 
@@ -157,9 +172,9 @@
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | The User clicks Channels button at the top left corner of the Feed screen.<br/>The App retrieves the list of User's Channels and the list of recommended Channels (most popular Channels not followed by the User). | Channel       | R                      | 2    |
-| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new original Posts in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
+| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new Jodels in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
 | User                | The User can then select the Channel he wants to read.       | Channel       | E                      | 1    |
-| User                | App retrieves the Channel Feed:<br/> &bullet; **Newest**: Posts within the dynamic radius, from the chosen Channel, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by vote count descending. | Original Post | R                      | 3    |
+| User                | App retrieves the Channel Feed:<br/> &bullet; **Newest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by vote count descending. | Jodel         | R                      | 3    |
 | User                | **Display Feed**.                                            | Post          |                        | 0    |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
@@ -175,12 +190,12 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | On Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 1    |
-|                     | App retrieves the Hashtag Feed:<br/> &bullet; **Newest**: Posts within the dynamic radius, with the chosen hashtag, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, with the chosen hashtag, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, with the chosen hashtag, ordered by vote count descending. | Original Post | R                      | 3    |
-|                     | **Display Feed**.                                            | Original Post |                        |      |
+| User                | On Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 2    |
+|                     | App retrieves the Hashtag Feed. The hashtag can occur in the reply, but only Jodels are retrieved:<br/> &bullet; **Newest**: Posts within the dynamic radius, with the chosen hashtag, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, with the chosen hashtag, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, with the chosen hashtag, ordered by vote count descending. | Jodel         | R                      | 3    |
+|                     | **Display Feed**.                                            | Jodel         |                        |      |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
-**Total: 5 CFP**
+**Total: 6 CFP**
 
 #### Display My Posts Feed
 
@@ -193,8 +208,8 @@
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | User clicks on MY KARMA button, at upper right corner of main Feed screen.<br/>The App displays ME screen.<br/>The User clicks on My Jodels button. | User          | E                      | 1    |
-|                     | App retrieves My Posts Feed:<br/> &bullet; **Newest**: Posts posted by the User, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts posted by the User, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts posted by the User, ordered by vote count descending. | Original Post | R                      | 3    |
-| User                | **Display Feed**.                                            | Original Post |                        |      |
+|                     | App retrieves My Posts Feed:<br/> &bullet; **Newest**: Posts posted by the User, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts posted by the User, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts posted by the User, ordered by vote count descending. | Jodel         | R                      | 3    |
+| User                | **Display Feed**.                                            | Jodel         |                        |      |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total 5 CFP**
@@ -206,7 +221,7 @@
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | On ME screen, User clicks on My Replies, My Pins or My Votes button. | Remark Kind   | E                      | 1    |
-|                     | The App retrieves posts in reverse chronological order according to the chosen remark kind:<br/> &bullet; **reply**: posts the User replied . Note that the replies does not show up in this screen, only the original posts that the User replied;<br/> &bullet; **pin**: posts the User pinned;<br/> &bullet; **vote**: posts the User upvoted. Note that, even the User upvoted a reply, only original posts appear in this screen, | Original Post | R                      | 1    |
+|                     | The App retrieves posts in reverse chronological order according to the chosen remark kind:<br/> &bullet; **reply**: posts the User replied . Note that the replies does not show up in this screen, only the Jodels that the User replied;<br/> &bullet; **pin**: posts the User pinned;<br/> &bullet; **vote**: posts the User upvoted. Note that, even the User upvoted a reply, only Jodels appear in this screen, | Jodel         | R                      | 1    |
 | User                | Display the retrieved list.                                  | Post          | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
@@ -216,18 +231,22 @@
 
 ![Feed](./image_post.png)
 
+
+
+![Jodel Displays](./full_page_ad.png)
+
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | In Feed Screen, User hold button &ldquo;Hold to view&rdquo; , then Swipe up  to access Picture Feed. | Picture       | E                      | 1    |
 |                     | App retrieves one picture at a time as User scrolls through the Picture Feed screen. | Picture       | R                      | 2    |
-| User                | Display the current Picture with message overlaid.           | Picture       | X                      | 1    |
+| User                | Display the current Picture with message overlaid at top left.<br/>Sponsored ads may be inserted in the Picture Feed. | Picture       | X                      | 1    |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
 **Total: 5 CFP**
 
 ### Interacting with Single Posts
 
-#### Create Message Post
+#### Create Jodel
 
 ![Create Post](./create_post.png)
 
@@ -243,10 +262,136 @@
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | In Feed Screen, User clicks &ldquo;+&rdquo; button.<br/>App displays enter Post screen.<br/>User types message and clicks &ldquo;Next&rdquo;. | Message       | E                      | 1    |
+| User                | User types message and clicks &ldquo;Next&rdquo;.            | Post Message  | E                      | 1    |
 |                     | App retrieves User's channels and displays &ldquo;Post To&hellip;&rdquo;  to screen. | Channel       | R                      | 1    |
 | User                | User selects the Channel to post and clicks the SEND button. | Channel       | E                      | 1    |
-|                     | App creates Post.                                            | Original Post | W                      | 1    |
+|                     | App creates Post.                                            | Jodel         | W                      | 1    |
+|                     | **Display Feed**                                             |               |                        |      |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
 **Total: 5 CFP**
+
+#### Create Picture Jodel
+
+![Create Picture Post](./create_image.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ---------- | ---------------------- | ---- |
+| User                | On Create Post Screen, User clicks 📷 button.<br/>The User takes a picture and clicks over the taken picture to type the Post message. | Jodel      | E                      | 1    |
+|                     | **Create Post**                                              |            |                        |      |
+
+**Total: 1 CFP**
+
+#### Display Jodel Details
+
+![Display Post Details](./jodel_replies.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On the Feed screen, User clicks on a Jodel.                  | Jodel         | E                      | 1    |
+|                     | App retrieves the replies to the chosen Jodel.               | Reply         | R                      | 1    |
+| User                | App displays the Jodel and a scrollable list of Replies.<br/>Note that each Reply on the list is labeled with the user_handle. | Reply         | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Send Message Reply
+
+![Create Reply Message](./create_reply_message.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group        | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ----------------- | ---------------------- | ---- |
+| User                | On Jodel Details Screen, User types message and clicks Send button | Reply<br/>Message | E                      | 1    |
+|                     | App creates Reply.                                           | Reply             | W                      | 1    |
+|                     | App displays Jodel Details Screen with the reply added at the end. | Reply             | X                      | 1    |
+| User                | App displays error message.                                  | Error message     | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Send Picture Reply
+
+![Picture Reply](./reply_picture.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group        | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ----------------- | ---------------------- | ---- |
+| User                | On Jodel Details Screen, User clicks 📷 button.<br/>The User takes a picture, clicks over the taken picture and type the Post message.<br/>The User clicks Send button. | Reply<br/>Picture | E                      | 1    |
+|                     | App creates Reply.                                           | Reply             | W                      | 1    |
+|                     | App displays Jodel Details Screen with the reply added at the end. | Reply             | X                      | 1    |
+| User                | App displays error message.                                  | Error message     | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Share a Jodel
+
+![Share a Jodel](./unpinned2.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group          | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------------- | ---------------------- | ---- |
+|                     | App retrieves sharing count.                                 | Jodel Sharing Count | R                      | 1    |
+| User                | App displays sharing count.                                  | Jodel Sharing Count | X                      | 1    |
+| User                | On Jodel Details Screen, User clicks  share button at the top right. | Jodel               | E                      | 1    |
+|                     | App retrieves the share URL of the Jodel, that shows the parent Jodel and all the replies, messages and pictures. E.g.: https://shared.jodel.com/YTr85rK5l1 | URL                 | R                      | 1    |
+| Sharing Service     | App sends the URL to the recipient using the Sharing Service. | URL                 | X                      | 1    |
+|                     | App updates sharing count on the database.                   | Jodel               | W                      | 1    |
+| User                | App updates sharing count display.                           | Jodel               | X                      | 1    |
+| User                | App displays error message.                                  | Error message       | X                      | 1    |
+
+**Total: 8 CFP**
+
+#### Pin / Unpin a Jodel
+
+![Jodel Unpinned](./unpinned2.png)
+
+
+
+![Pinned Jodel](./pinned.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group          | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------------- | ---------------------- | ---- |
+|                     | App retrieves pin count.                                     | Jodel Sharing Count | R                      | 1    |
+| User                | App displays pin count.                                      | Jodel Sharing Count | X                      | 1    |
+| User                | On Jodel Details Screen, User clicks  share button at the top right. | Jodel               | E                      | 1    |
+|                     | App updates the database.                                    | Jodel, Remark       | W                      | 1    |
+| User                | App updates the pin display.                                 | Jodel               | X                      | 1    |
+| User                | App displays error message.                                  | Error message       | X                      | 1    |
+
+**Total: 6 CFP**
+
+#### Upvote / Downvote a Post
+
+![Post](./post2.png)
+
+![Upvoted Post](./upvote.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On a Post Display, the User clicks ∧ or ∨ buttons to upvote or downvote a post.<br/>If the user already voted | Post, Remark  | E                      | 1    |
+|                     | App updates data base.                                       | Post, Remark  | W                      | 1    |
+|                     | App updates Post Display.                                    | Post          | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Give Thanks
+
+![Before Thanks](./upvoted.png)
+
+
+
+![After Thanks](./thanked.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group         | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------------ | ---------------------- | ---- |
+| User                | After O.J. upvotes a reply, the ∧ becomes a ♡.<br/>The O.J. clicks the ♡ to give thanks. | Post, Remark       | E                      | 1    |
+|                     | App updates data base.                                       | Post, Remark, User | W                      | 1    |
+|                     | App updates Post Display showing a dimmed ♡ at the bottom right. | Post               | X                      | 1    |
+| User                | App displays error message.                                  | Error message      | X                      | 1    |
+
+**Total: 4 CFP**
+
