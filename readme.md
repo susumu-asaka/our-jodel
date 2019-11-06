@@ -21,7 +21,7 @@ A *Reply* is a Post written in answer or response to a Jodel.
 | ----------- | ------------------------------------------------------------ |
 | message     | Text can have length up to 240 characters.                   |
 | imageBase64 | Image encoded base 64. Can be a very short video, up to 20 seconds. |
-| user_handle | Consists of a hexadecimal number. This number uniquely identifies the posting user in the thread, i.e. when the first replier makes another reply on the same Jodel,  that reply will have the same user_handle as the first. However, the user_handle is not unique for every user in every thread, i.e. when a replier makes another reply on a different Jodel, that reply will have a different user_handle.<br/>In other words, it is possible to know which replies on a Jodel was made by the same User, but it is not possible to reconstruct a user's Jodel activities from long-time observations.<br/>The *Original Jodeler* is the User who posted the initial Jodel. His user_handle is 0, and his posts on a thread are identified by the initials O.J. |
+| user_handle | This is a number uniquely identifies the posting user in the thread, i.e. when the first replier makes another reply on the same Jodel, that reply will have the same user_handle as the first. However, the user_handle is not unique for every user in every thread, i.e. when a replier makes another reply on a different Jodel, that reply will have a different user_handle.<br/>In other words, it is possible to know which replies on a Jodel was made by the same User, but it is not possible to reconstruct a user's Jodel activities from long-time observations.<br/>The *Original Jodeler* is the User who posted the initial Jodel. His user_handle is 0, and his posts on the thread are identified by the initials OJ. |
 | color       | The color has no actual meaning. The color of a Jodel is selected randomly when the user clicks the &ldquo;+&rdquo; button.<br />The color of a Reply is always the same as the color of the parent Jodel.<br/>Posts can have seven colors:<br />![colors](./colors.png) |
 | latitude    | Signed latitude of the location of posting, in degrees, with precision of 5 decimal places. |
 | longitude   | Signed longitude of the location of posting, in degrees, with precision of 5 decimal places. |
@@ -55,11 +55,11 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 #### Notification
 
-| Attribute | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| type      | One of the following:<br />&bullet; **ReplyOnReply**: a reply was posted on a thread, after the user has replied on the same thread<br />&bullet; **ReplyOnJodel**: a reply was posted on a User's Jodel<br />&bullet; **VoteOnPost**: vote on a post of this user<br />&bullet; **ReplyOnPin**: a reply was posted on a Jodel pinned by this user |
-| read      | Flag to signal that the notification has been read.          |
-| time      | Date and time of the event.                                  |
+| Attribute   | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| description | Notifications are emitted in the background on events occurring on the Jodel you subscribed or pinned. This attribute describes which event occurred:<br />&bullet; **Reply from OJ**: OJ replied on the Jodel you subscribed;<br />&bullet; **Thanks from OJ**: Your Reply received thanks;<br/>&bullet; **Reply on Jodel**: a reply was posted on the Jodel you subscribed;<br />&bullet; **n Votes on Jodel**: your Jodel received n votes<br />&bullet; **Reply on Pin**: a reply was posted on a Jodel you pinned. |
+| read        | Flag to signal that the notification has been read.          |
+| time        | Date and time of the event.                                  |
 
 #### BoostedPostBooking
 
@@ -89,6 +89,10 @@ A *Reply* is a Post written in answer or response to a Jodel.
 ### User Account Management
 
 #### Signup
+
+![Initial Screen](./initial.png)
+
+![Allow Location](./allow_location.png)
 
 ![Gender Question](./gender.png)
 
@@ -294,7 +298,7 @@ A *Reply* is a Post written in answer or response to a Jodel.
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | On the Feed screen, User clicks on a Jodel.                  | Jodel         | E                      | 1    |
 |                     | App retrieves the replies to the chosen Jodel.               | Reply         | R                      | 1    |
-| User                | App displays the Jodel and a scrollable list of Replies.<br/>Note that each Reply on the list is labeled with the user_handle. | Reply         | X                      | 1    |
+| User                | App displays the Jodel and a scrollable list of Replies.<br/>Note that each Reply on the list is labeled with the user_handle. <br/>The Jodel Details Screen is refreshed if the User swipe down on the first page. | Reply         | X                      | 1    |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
 **Total: 4 CFP**
@@ -388,10 +392,63 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 | Functional<br/>User | Sub-process Description                                      | Data Group         | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------------ | ---------------------- | ---- |
-| User                | After O.J. upvotes a reply, the ∧ becomes a ♡.<br/>The O.J. clicks the ♡ to give thanks. | Post, Remark       | E                      | 1    |
+| User                | After OJ upvotes a reply, the ∧ becomes a ♡.<br/>The OJ clicks the ♡ to give thanks. | Post, Remark       | E                      | 1    |
 |                     | App updates data base.                                       | Post, Remark, User | W                      | 1    |
 |                     | App updates Post Display showing a dimmed ♡ at the bottom right. | Post               | X                      | 1    |
 | User                | App displays error message.                                  | Error message      | X                      | 1    |
 
 **Total: 4 CFP**
 
+#### Enable / Disable Notifications
+
+![Enable Notifications](./enable_notifications.png)
+
+![Disable Notifications](./disable_notifications.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On Jodel Detail Screen, the User taps on the 3 dots (...) at the bottom of the Jodel. Then he selects &ldquo;Enable notifications&rdquo; or &ldquo;Disable notifications&rdquo;  to toggle notification status. | Post, Remark  | E                      | 1    |
+|                     | App updates data base.                                       | Post, Remark  | W                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 3 CFP**
+
+#### Delete Post
+
+![Delete Post](./delete_post.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On Jodel Detail Screen, the User taps on the 3 dots (...) at the bottom of his own Jodel or Reply. Then he selects &ldquo;Delete Jodel&rdquo;. | Post, Remark  | E                      | 1    |
+|                     | App updates data base.<br/>When a Reply is deleted, the notifications status of the Jodel remains unchanged.<br/>When a Jodel is deleted, all the replies and users' remarks associated are also deleted. | Post, Remark  | W                      | 1    |
+| User                | When a Reply is deleted, the App continues to display the Jodel Detail Screen.<br/>When a Jodel is deleted, the App returns to Main Feed Display. | Jodel, Reply  | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+### Interacting with Notifications
+
+#### Receive Notifications
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| Other User          | Background process receives Notification from the            | Post, Remark  | E                      | 1    |
+|                     | App updates data base.<br/>When a Reply is deleted, the notifications status of the Jodel remains unchanged.<br/>When a Jodel is deleted, all the replies and users' remarks associated are also deleted. | Post, Remark  | W                      | 1    |
+| User                | When a Reply is deleted, the App continues to display the Jodel Detail Screen.<br/>When a Jodel is deleted, the App returns to Main Feed Display. | Jodel, Reply  | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Display Notifications
+
+![Notifications Center](./notifications.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On ME screen, User selects Notifications.                    | User          | E                      | 1    |
+|                     | The App retrieves Notifications in reverse chronological order. | Notification  | R                      | 1    |
+| User                | App displays scrollable list of Notifications.<br/>The User can click on a Notification to go to the Jodel Detail Screen. | Notification  | X                      | 1    |
+|                     | When the User clicks on a unread Notification, App sets it as read. | Notification  | W                      | 1    |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 4 CFP**
