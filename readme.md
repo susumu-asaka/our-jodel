@@ -96,7 +96,7 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 ![Gender Question](./gender.png)
 
-![Age Question](./age.png)
+![Birthdate Question](./birthdate.png)
 
 ![Group Question](./group.png)
 
@@ -126,12 +126,10 @@ A *Reply* is a Post written in answer or response to a Jodel.
 |                      | App retrieves the Activation Record.                         | Activation Record  | R                      | 1    |
 |                      | Server authenticates the User's Activation Record and returns a JWT Access Token, valid for 24 hours. | User, Access Token | R                      | 1    |
 |                      | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W                      | 1    |
-| Location Service     | App gets User Location                                       | User Location      | E                      | 1    |
-|                      | Server updates User Location                                 | Device Location    | W                      | 1    |
 |                      | **Display Main Feed**                                        |                    |                        |      |
 | User                 | App displays error message                                   | Error message      | X                      | 1    |
 
-**Total: 7 CFP**
+**Total: 5 CFP**
 
 ### Reading Posts
 
@@ -143,11 +141,12 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 ![Refreshing Feed](./refresh.png)
 
-| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | A *Feed* consists of a set of three views listing Jodels only, the Replies does not show up :<br/>&bullet; &#x1f553; **Newest**: up to 150 Jodels in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: up to 150 Jodels ordered by child count descending;<br/> &bullet;  ∧ **Loudest**: up to 150 Jodels ordered by vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen.<br/>The Feed is refreshed if the User swipe down on the first page. | Control Command | E                      | 1    |
-| User                | App displays a scrollable list of Jodels from the chosen view. | Jodel           | X                      | 2    |
-| User                | App displays error message                                   | Error message   | X                      | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group                    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ----------------------------- | ---------------------- | ---- |
+|                     | **Set Location**                                             | User Location, Dynamic Radius |                        |      |
+| User                | A *Feed* consists of a set of three views listing Jodels only, the Replies does not show up :<br/>&bullet; &#x1f553; **Newest**: up to 150 Jodels in reverse chronological order;<br/> &bullet; &#x1f4ac; **Most discussed**: up to 150 Jodels ordered by child count descending;<br/> &bullet;  ∧ **Loudest**: up to 150 Jodels ordered by vote count descending.<br/>The User can choose which view he wants to read by clicking one of the buttons at the bottom of the screen.<br/>The Feed is refreshed if the User swipe down on the first page. | Control Command               | E                      | 1    |
+| User                | App displays a scrollable list of Jodels from the chosen view. | Jodel                         | X                      | 2    |
+| User                | App displays error message                                   | Error message                 | X                      | 1    |
 
 **Total: 4 CFP**
 
@@ -425,12 +424,10 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 ![Channels](./channels.png)
 
-
-
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | The User clicks Channels button at the top left corner of the Feed screen.<br/>The App retrieves the list of User's Channels and the list of recommended Channels (most popular Channels not followed by the User). | Channel       | R                      | 2    |
-| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new Jodels in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
+| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new unread Jodels in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
 | User                | App displays error message.                                  | Error message | X                      | 1    |
 
 **Total: 9 CFP**
@@ -483,4 +480,61 @@ A *Reply* is a Post written in answer or response to a Jodel.
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 4 CFP**
+
+#### Follow / Unfollow Channel
+
+![Channel Unfollowed](./channel_unfollowed.png)
+
+
+
+![Channel Followed](./channel.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On a Channel Display, the User clicks + to follow or ✓ to unfollow a Channel. | Channel       | E                      | 1    |
+|                     | App updates data base.                                       | User, Channel | W                      | 1    |
+|                     | App updates Channel Display.                                 | Channel       | X                      | 1    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+### Interacting with User Profile
+
+#### Set Location
+
+![Set Location](./location.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group            | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------------- | ---------------------- | ---- |
+| Location Service    | App gets User current Location.                              | User Location         | E                      | 1    |
+|                     | App retrieves User Hometown.                                 | User Location         | E                      | 1    |
+| User                | User select between current location or hometown on drop down city menu. | City                  | E                      | 1    |
+|                     | App updates User Location                                    | User Location         | W                      | 1    |
+|                     | App retrieves the nearest 150 Jodels in order to determine the dynamic radius. | Post, Dynamic  Radius | R                      | 1    |
+| User                | App displays error message.                                  | Error message         | X                      | 1    |
+
+**Total: 6 CFP**
+
+#### Set Hometown
+
+![More](./more.png)
+
+![Hometown 1](./hometown1.png)
+
+![Hometown 4](./hometown4.png)
+
+![Hometown 5](./hometown5.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
+| User                | From ME Screen, User selects More, then Hometown.<br/>In order to set the Hometown, **the User needs to be physically present in that location** to save it once and for all.<br/>The user can reset the Hometown **only once per month**. | Control Command | E                      | 1    |
+|                     | App retrieves User current Hometown.                         | User Hometown   | R                      | 1    |
+| Location Service    | App gets User current Location.                              | Location        | E                      | 1    |
+| User                | App displays current City as the new Hometown.<br/>User confirms. | City            | X                      | 1    |
+|                     | App updates the User Hometown.                               | User Hometown   | W                      | 1    |
+| User                | App displays error message.                                  | Error message   | X                      | 1    |
+
+**Total: 6 CFP**
+
+#### Display User Profile
 
