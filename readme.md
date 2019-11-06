@@ -51,13 +51,13 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 | Attribute | Description                                                  |
 | --------- | ------------------------------------------------------------ |
-| kind      | One of the following:<br />&bull; **upvote**<br />&bullet; **downvote**<br />&bullet; **subscribe**: when the user posts a Jodel, Reply or pin a Jodel, it gets automatically subscribed<br />&bullet; **thank**: the author can thank for a reply from another user, after upvoting it.<br />&bullet; **pin**. |
+| kind      | One of the following:<br />&bull; **upvote**<br />&bullet; **downvote**<br />&bullet; **subscribe**: The User will receive push notifications on any updates to the subscribed Jodels. The Jodels and Replies posted by the User are automatically subscribed;<br />&bullet; **thank**: the OJ can thank for a reply from another user, after upvoting it;<br />&bullet; **pin**: Allows the User to save and follow the Jodel. The User will receive push notifications on any updates to the pinned Jodels. The pinned Jodels will be visible in the &ldquo;My Pins&rdquo; section. |
 
 #### Notification
 
 | Attribute   | Description                                                  |
 | ----------- | ------------------------------------------------------------ |
-| description | Notifications are emitted in the background on events occurring on the Jodel you subscribed or pinned. This attribute describes which event occurred:<br />&bullet; **Reply from OJ**: OJ replied on the Jodel you subscribed;<br />&bullet; **Thanks from OJ**: Your Reply received thanks;<br/>&bullet; **Reply on Jodel**: a reply was posted on the Jodel you subscribed;<br />&bullet; **n Votes on Jodel**: your Jodel received n votes<br />&bullet; **Reply on Pin**: a reply was posted on a Jodel you pinned. |
+| description | Notifications are emitted in the background on events occurring on the Jodel you subscribed or pinned. This attribute describes which event occurred:<br />&bullet; **Reply from OJ**: OJ replied on the Jodel you subscribed;<br />&bullet; **Thanks from OJ**: Your Reply received thanks;<br/>&bullet; **Reply on Jodel**: a reply was posted on the Jodel you subscribed;<br />&bullet; **Reply on Pin**: a reply was posted on a Jodel you pinned. |
 | read        | Flag to signal that the notification has been read.          |
 | time        | Date and time of the event.                                  |
 
@@ -128,11 +128,10 @@ A *Reply* is a Post written in answer or response to a Jodel.
 |                      | App saves the Access Token in the device storage.<br/>The App will send the Access Token in the authentication header of the HTTP requests: &ldquo;Authentication: Bearer {token}&rdquo;. This authorizes the User for seeing posts, voting, posting etc. | Access Token       | W                      | 1    |
 | Location Service     | App gets User Location                                       | User Location      | E                      | 1    |
 |                      | Server updates User Location                                 | Device Location    | W                      | 1    |
-|                      | App retrieves the nearest 150 Jodels in order to determine the dynamic radius. | Post               | R                      | 1    |
 |                      | **Display Main Feed**                                        |                    |                        |      |
 | User                 | App displays error message                                   | Error message      | X                      | 1    |
 
-**Total: 8 CFP**
+**Total: 7 CFP**
 
 ### Reading Posts
 
@@ -156,50 +155,12 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 | Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | The User can select to read feed from his current GPS location or hometown on the City drop-down button at the top of the screen. | Location      | E                      | 1    |
+|                     | App retrieves the nearest 150 Jodels in order to determine the dynamic radius. | Post          | R                      | 1    |
 |                     | App retrieves Main Feed:<br/> &bullet; **Newest**: Up to 150 Jodels within the dynamic radius, from User's channels, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Up to 150 Jodels within the dynamic radius, from User's channels, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, from User's channels, posted in the last 7 days, ordered by vote count descending. | Jodel         | R                      | 3    |
 | User                | **Display Feed**.                                            | Post          |                        |      |
 | User                | App displays Error message.                                  | Error Message | X                      | 1    |
 
 **Total: 5 CFP**
-
-#### Display Channel Feed
-
-![Channels](./channels.png)
-
-
-
-![ChannelFeed](./feed_channel.png)
-
-
-
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | The User clicks Channels button at the top left corner of the Feed screen.<br/>The App retrieves the list of User's Channels and the list of recommended Channels (most popular Channels not followed by the User). | Channel       | R                      | 2    |
-| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new Jodels in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
-| User                | The User can then select the Channel he wants to read.       | Channel       | E                      | 1    |
-| User                | App retrieves the Channel Feed:<br/> &bullet; **Newest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by vote count descending. | Jodel         | R                      | 3    |
-| User                | **Display Feed**.                                            | Post          |                        | 0    |
-| User                | App displays error message.                                  | Error message | X                      | 1    |
-
-**Total: 9 CFP**
-
-#### Display Hashtag Feed
-
-![Hashtag](./hashtag.png)
-
-
-
-![Hashtag Feed](./feed_hashtag.png)
-
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | On Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 2    |
-|                     | App retrieves the Hashtag Feed. The hashtag can occur in the reply, but only Jodels are retrieved:<br/> &bullet; **Newest**: Posts within the dynamic radius, with the chosen hashtag, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, with the chosen hashtag, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, with the chosen hashtag, ordered by vote count descending. | Jodel         | R                      | 3    |
-|                     | **Display Feed**.                                            | Jodel         |                        |      |
-| User                | App displays error message                                   | Error message | X                      | 1    |
-
-**Total: 6 CFP**
 
 #### Display My Posts Feed
 
@@ -294,14 +255,15 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 
 
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| User                | On the Feed screen, User clicks on a Jodel.                  | Jodel         | E                      | 1    |
-|                     | App retrieves the replies to the chosen Jodel.               | Reply         | R                      | 1    |
-| User                | App displays the Jodel and a scrollable list of Replies.<br/>Note that each Reply on the list is labeled with the user_handle. <br/>The Jodel Details Screen is refreshed if the User swipe down on the first page. | Reply         | X                      | 1    |
-| User                | App displays error message.                                  | Error message | X                      | 1    |
+| Functional<br/>User | Sub-process Description                                      | Data Group           | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | -------------------- | ---------------------- | ---- |
+| User                | On the Feed screen, User clicks on a Jodel.                  | Jodel                | E                      | 1    |
+|                     | App retrieves the replies and the Notifications associated to the Jodel. | Reply , Notification | R                      | 2    |
+|                     | App marks any existing Notification as read.                 | Notification         | W                      | 1    |
+| User                | App displays the Jodel and a scrollable list of Replies.<br/>Note that each Reply on the list is labeled with the user_handle. <br/>The Jodel Details Screen is refreshed if the User swipe down on the first page. | Reply                | X                      | 1    |
+| User                | App displays error message.                                  | Error message        | X                      | 1    |
 
-**Total: 4 CFP**
+**Total:  6 CFP**
 
 #### Send Message Reply
 
@@ -428,18 +390,21 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 ### Interacting with Notifications
 
-#### Receive Notifications
+#### Push Notifications
 
-| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
-| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
-| Other User          | Background process receives Notification from the            | Post, Remark  | E                      | 1    |
-|                     | App updates data base.<br/>When a Reply is deleted, the notifications status of the Jodel remains unchanged.<br/>When a Jodel is deleted, all the replies and users' remarks associated are also deleted. | Post, Remark  | W                      | 1    |
-| User                | When a Reply is deleted, the App continues to display the Jodel Detail Screen.<br/>When a Jodel is deleted, the App returns to Main Feed Display. | Jodel, Reply  | X                      | 1    |
-| User                | App displays error message.                                  | Error message | X                      | 1    |
+| Functional<br/>User  | Sub-process Description                                      | Data Group   | Data<br/>Mvmt<br/>Type | CFP  |
+| -------------------- | ------------------------------------------------------------ | ------------ | ---------------------- | ---- |
+| Another User         | Another User replies on a Jodel.                             | Reply        | E                      | 1    |
+|                      | Server checks the Users who should receive push Notifications. | User, Remark | R                      | 1    |
+|                      | Server creates and sends the Notifications.                  | Notification | W                      | 1    |
+| Notification Service | App receives Notification and dispatches it to the Notification Service of the device. | Notification | X                      | 1    |
+| User                 | User opens Notification.                                     | Notification | E                      | 1    |
+| User                 | System opens App.                                            | Notification | X                      | 1    |
+|                      | **Display Jodel Details**                                    | Jodel        |                        |      |
 
-**Total: 4 CFP**
+**Total: 6 CFP**
 
-#### Display Notifications
+#### Display Notification Center
 
 ![Notifications Center](./notifications.png)
 
@@ -447,8 +412,75 @@ A *Reply* is a Post written in answer or response to a Jodel.
 | ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
 | User                | On ME screen, User selects Notifications.                    | User          | E                      | 1    |
 |                     | The App retrieves Notifications in reverse chronological order. | Notification  | R                      | 1    |
-| User                | App displays scrollable list of Notifications.<br/>The User can click on a Notification to go to the Jodel Detail Screen. | Notification  | X                      | 1    |
-|                     | When the User clicks on a unread Notification, App sets it as read. | Notification  | W                      | 1    |
+| User                | App displays scrollable list of Notifications.               | Notification  | X                      | 1    |
+|                     | The User opens a Notification,                               | Notification  | E                      | 1    |
+|                     | **Display Jodel Details**                                    |               |                        |      |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 5 CFP**
+
+### Interacting with Channels
+
+#### Display Channels Screen
+
+![Channels](./channels.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | The User clicks Channels button at the top left corner of the Feed screen.<br/>The App retrieves the list of User's Channels and the list of recommended Channels (most popular Channels not followed by the User). | Channel       | R                      | 2    |
+| User                | The App displays the Channels screen with the list of User's Channels and the list of recommended Channels .<br/>If there are new Jodels in one of the User's Channels, its name is written in boldface and goes to the top of the list. | Channel       | X                      | 2    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 9 CFP**
+
+#### Display Channel Feed
+
+![User Channel](./channel.png)
+
+
+
+![ChannelFeed](./feed_channel.png)
+
+
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | User clicks on Channel he wants to read.                     | Channel       | E                      | 1    |
+|                     | App retrieves the Channel Feed:<br/> &bullet; **Newest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by reply count descending.<br/> &bullet; **Loudest**: Up to 150 Jodels within the dynamic radius, from the chosen Channel, posted in the last 7 days, ordered by vote count descending. | Jodel         | R                      | 3    |
+| User                | **Display Feed**.                                            | Post          |                        | 0    |
+| User                | App displays error message.                                  | Error message | X                      | 1    |
+
+**Total: 4 CFP**
+
+#### Display Hashtag Feed
+
+![Hashtag](./hashtag.png)
+
+
+
+![Hashtag Feed](./feed_hashtag.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ------------------------------------------------------------ | ------------- | ---------------------- | ---- |
+| User                | On Channels screen, User clicks on the magnifying glass as if searching for a Channel.<br/>A bar will show up where the User can switch the search to hashtags instead of Channels.<br/>The User then types the hashtag on the search box.<br/>The button with the hashtag will show up 3 seconds after the User finishes typing.<br/>The User then clicks on the hashtag button to begin searching. | Hashtag       | E                      | 1    |
+|                     | App retrieves the Hashtag Feed. The hashtag can occur in the reply, but only parent Jodels are retrieved:<br/> &bullet; **Newest**: Posts within the dynamic radius, with the chosen hashtag, sorted in reverse chronological order.<br/> &bullet; **Most Discussed**: Posts within the dynamic radius, with the chosen hashtag, ordered by reply count descending.<br/> &bullet; **Loudest**: Posts within the dynamic radius, with the chosen hashtag, ordered by vote count descending. | Jodel         | R                      | 3    |
+|                     | **Display Feed**.                                            | Jodel         |                        |      |
+| User                | App displays error message                                   | Error message | X                      | 1    |
+
+**Total: 5 CFP**
+
+#### Search a Channel
+
+![Search a Channel](./search_channels.png)
+
+| Functional<br/>User | Sub-process Description                                      | Data Group    | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | :----------------------------------------------------------- | ------------- | :--------------------- | ---- |
+| User                | On Channels screen, User clicks on the magnifying glass.<br/>The User types on the search box. | Channel Name  | E                      | 1    |
+|                     | While the User types, the App searches existing channels that match the search. | Channel       | R                      | 1    |
+| User                | While searching, the App displays the result of the search.<br/>The counter at the right shows how many Users in the dynamic area are currently following the channel. | Channel       | X                      | 1    |
 | User                | App displays error message                                   | Error message | X                      | 1    |
 
 **Total: 4 CFP**
+
