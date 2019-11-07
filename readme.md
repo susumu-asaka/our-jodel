@@ -527,7 +527,7 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 | Functional<br/>User | Sub-process Description                                      | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
 | ------------------- | ------------------------------------------------------------ | --------------- | ---------------------- | ---- |
-| User                | From ME Screen, User selects More, then Hometown.<br/>In order to set the Hometown, **the User needs to be physically present in that location** to save it once and for all.<br/>The user can reset the Hometown **only once per month**. | Control Command | E                      | 1    |
+| User                | From ME Screen, User selects More.<br/>From More Screen, User selects Hometown.<br/>In order to set the Hometown, **the User needs to be physically present in that location** to save it once and for all.<br/>The user can reset the Hometown **only once per month**. | Control Command | E                      | 1    |
 |                     | App retrieves User current Hometown.                         | User Hometown   | R                      | 1    |
 | Location Service    | App gets User current Location.                              | Location        | E                      | 1    |
 | User                | App displays current City as the new Hometown.<br/>User confirms. | City            | X                      | 1    |
@@ -536,5 +536,88 @@ A *Reply* is a Post written in answer or response to a Jodel.
 
 **Total: 6 CFP**
 
-#### Display User Profile
+#### Display My Profile
 
+![My Profile](./profile.png)
+
+| Functional<br/>User | Sub-process Description                        | Data Group      | Data<br/>Mvmt<br/>Type | CFP  |
+| ------------------- | ---------------------------------------------- | --------------- | ---------------------- | ---- |
+| User                | From More Screen, the User selects My Account. | Control Command | E                      | 1    |
+|                     | App retrieves User Profile.                    | User Profile    | R                      | 1    |
+| User                | App displays User Profile.                     | User Profile    | X                      | 1    |
+| User                | App displays error message.                    | Error message   | X                      | 1    |
+
+**Total: 4 CFP**
+
+## Suggestion for MVP
+
+As a suggestion, the following features can be left out from MVP:
+
+* Dynamic radius, maybe we should start with a fixed radius of 100 km;
+
+* Share a Jodel;
+
+* Pin a Jodel;
+
+* Give thanks;
+
+* Video posts;
+
+* Notifications;
+
+* Channels;
+
+* Hometown;
+
+* Boosted Posts;
+
+* Jodel Display (full page ads).
+
+## Standards and Technologies
+
+### GitHub
+
+The project must be done in two private GitHub repositories: one for the application server and other for the mobile application.
+
+### Test Coverage
+
+The project must use a test coverage tool.
+
+The minimum acceptable code coverage is 91%.
+
+### Database
+
+The project should use MongoDB as the preferred database and Mongoose as the preferred ODM.
+
+### Application Server
+
+The application server must be implemented using a GraphQL API running on Nodejs.
+
+The application server will be deployed to DigitalOcean.
+
+### Mobile Application
+
+The mobile application must be implemented using Ionic React and single code base to run on Android and IOS devices.
+
+### Application Server Deployment
+
+The development team will install MongoDB and NodeJS in the DigitalOcean cloud server.
+
+The development team must supply a deployment script to setup the environment and install the application server in the DigitalOcean cloud server.
+
+The deployment script must:
+
+* Download the project from GitHub;
+
+* Install dependencies;
+
+* Create a service to execute the application server;
+
+* Setup the database.
+
+The development team should provide in `readme.md` the commands to:
+
+* Start the service;
+* Pause the service;
+* Restart the service;
+* Keep track of the service log.
