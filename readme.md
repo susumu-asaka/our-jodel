@@ -595,11 +595,7 @@ The application server must be implemented using a GraphQL API running on Nodejs
 
 The application server will be deployed to DigitalOcean.
 
-### Mobile Application
-
-The mobile application must be implemented using Ionic React and single code base to run on Android and IOS devices.
-
-### Application Server Deployment
+#### Deployment
 
 The development team will install MongoDB and NodeJS in the DigitalOcean cloud server.
 
@@ -621,3 +617,15 @@ The development team should provide in `readme.md` the commands to:
 * Pause the service;
 * Restart the service;
 * Keep track of the service log.
+
+### Mobile Application
+
+The mobile application must be implemented using Ionic React and single code base to run on Android and IOS devices.
+
+#### Distribution
+
+The mobile application must be distributed through:
+
+* Google Play Store to Android devices;
+* Apple App Store to IOS devices.
+
